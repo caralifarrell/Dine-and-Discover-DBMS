@@ -1,0 +1,1637 @@
+-- DDL (Table creation and data insertion)
+
+-- Categories table creation
+
+CREATE TABLE Categories(
+  CategoryID INT NOT NULL AUTO_INCREMENT,
+  CategoryName VARCHAR(50) NOT NULL,
+  PRIMARY KEY (CategoryID)
+);
+
+-- Address table creation
+
+CREATE TABLE Address(
+  AddressID INT NOT NULL AUTO_INCREMENT,
+  City VARCHAR(50) NOT NULL,
+  Street VARCHAR(100) NOT NULL,
+  State VARCHAR(50) NOT NULL,
+  Country VARCHAR(50) NOT NULL,
+  ZipCode VARCHAR(20) NOT NULL,
+  PRIMARY KEY (AddressID)
+);
+
+-- Restaurants table creation
+
+CREATE TABLE Restaurants(
+  RestaurantID INT NOT NULL AUTO_INCREMENT,
+  PhoneNumber VARCHAR(12) NOT NULL,
+  RestaurantName VARCHAR(100) NOT NULL,
+  Description TEXT NOT NULL,
+  Website VARCHAR(100) NOT NULL,
+  BusinessOwner VARCHAR(100) NOT NULL,
+  Pricing VARCHAR(50) DEFAULT NULL,
+  ReviewsReceived INT DEFAULT NULL,
+  FiveStarReceived INT DEFAULT NULL,
+  FourStarReceived INT DEFAULT NULL,
+  ThreeStarReceived INT DEFAULT NULL,
+  TwoStarReceived INT DEFAULT NULL,
+  OneStarReceived INT DEFAULT NULL,
+  AverageRating DECIMAL(2,1) DEFAULT NULL,
+  OpeningHours TIME NOT NULL,
+  ClosingHours TIME NOT NULL,
+  AddressID INT NOT NULL,
+  CategoryID INT NOT NULL,
+  PRIMARY KEY (RestaurantID),
+  FOREIGN KEY (AddressID) REFERENCES Address(AddressID),
+  FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+
+-- Users table creation
+
+CREATE TABLE Users(
+  UserID INT NOT NULL AUTO_INCREMENT,
+  Username VARCHAR(50) NOT NULL,
+  Password VARCHAR(50) NOT NULL,
+  Email VARCHAR(50) NOT NULL,
+  FirstName VARCHAR(50) DEFAULT NULL,
+  LastName VARCHAR(50) DEFAULT NULL,
+  ProfilePicture VARCHAR(50) DEFAULT NULL,
+  RegistrationDate DATE NOT NULL,
+  NumFollowers INT DEFAULT NULL,
+  NumFollowing INT DEFAULT NULL,
+  CityLocated VARCHAR(50) DEFAULT NULL,
+  CountryLocated VARCHAR(50) DEFAULT NULL,
+  PRIMARY KEY (UserID)
+);
+
+-- Reservations table creation
+
+CREATE TABLE Reservations(
+  ReservationID INT NOT NULL AUTO_INCREMENT,
+  ReservedTime DATETIME NOT NULL,
+  Guests INT NOT NULL,
+  RestaurantID INT NOT NULL,
+  UserID INT NOT NULL,
+  PRIMARY KEY (ReservationID),
+  FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID),
+  FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Reviews table creation
+
+CREATE TABLE Reviews(
+  ReviewID INT NOT NULL AUTO_INCREMENT,
+  ReviewContent VARCHAR(255) NOT NULL,
+  ReviewDate DATE NOT NULL,
+  Rating INT NOT NULL,
+  PhotoID VARCHAR(50) DEFAULT NULL,
+  UserID INT NOT NULL,
+  RestaurantID INT NOT NULL,
+  PRIMARY KEY (ReviewID),
+  FOREIGN KEY (UserID) REFERENCES Users(UserID),
+  FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID)
+);
+
+-- Photos table creation
+
+CREATE TABLE Photos(
+  PhotoID INT NOT NULL AUTO_INCREMENT,
+  PhotoAddressLink VARCHAR(255) NOT NULL,
+  ReviewID INT NOT NULL,
+  PRIMARY KEY (PhotoID),
+  FOREIGN KEY (ReviewID) REFERENCES Reviews(ReviewID)
+);
+
+-- Comments table creation
+
+CREATE TABLE Comments(
+  CommentID INT NOT NULL AUTO_INCREMENT,
+  Content TEXT NOT NULL,
+  UserID INT NOT NULL,
+  ReviewID INT NOT NULL,
+  PRIMARY KEY (CommentID),
+  FOREIGN KEY (ReviewID) REFERENCES Reviews(ReviewID),
+  FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Likes table creation
+
+CREATE TABLE Likes(
+  LikeID INT NOT NULL AUTO_INCREMENT,
+  ReviewID INT NOT NULL,
+  UserID INT NOT NULL,
+  PRIMARY KEY (LikeID),
+  FOREIGN KEY (ReviewID) REFERENCES Reviews(ReviewID),
+  FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Categories data insertion
+
+INSERT INTO Categories (CategoryName)
+VALUES
+('Casual Dining'),
+('Fine Dining'),
+('Ethnic Cuisine'),
+('Specialty Cuisine'),
+('Artisanal/Specialized'),
+('Family-Friendly'),
+('Seasonal/Rustic');
+
+-- Address data insertion
+
+INSERT INTO Address (City, Street, State, Country, ZipCode)
+VALUES
+('Toronto', '15 Maple Lane', 'ON', 'Canada', 'M5R 2E8'),
+('Melbourne', '47 Kangaroo Way', 'VIC', 'Australia', '3000'),
+('New York', '220 Liberty Street', 'NY', 'USA', '10005'),
+('Vancouver', '88 Pacific Blvd', 'BC', 'Canada', 'V6Z 2R6'),
+('Sydney', '33 Harbour Street', 'NSW', 'Australia', '2000'),
+('Los Angeles', '405 Sunset Blvd', 'CA', 'USA', '90028'),
+('Montreal', '1024 Saint Laurent', 'QC', 'Canada', 'H2Z 9Z9'),
+('Perth', '59 Swan River Drive', 'WA', 'Australia', '6000'),
+('Chicago', '1400 Magnolia Ave', 'IL', 'USA', '60610'),
+('Ottawa', '77 Parliament Hill', 'ON', 'Canada', 'K1A 0A9'),
+('Brisbane', '21 Sunshine Rd', 'QLD', 'Australia', '4000'),
+('Seattle', '300 Rainier Ave', 'WA', 'USA', '98144'),
+('Calgary', '840 Snowy Lane', 'AB', 'Canada', 'T2N 1N4'),
+('Adelaide', '12 Vineyard Crescent', 'SA', 'Australia', '5000'),
+('Austin', '908 Cypress Road', 'TX', 'USA', '78701'),
+('Quebec City', '500 Grande Allée Est', 'QC', 'Canada', 'G1R 2J7'),
+('Hobart', '34 Salamanca Place', 'TAS', 'Australia', '7000'),
+('Denver', '1550 Platte Street', 'CO', 'USA', '80202'),
+('Halifax', '2000 Barrington St', 'NS', 'Canada', 'B3J 3K1'),
+('Darwin', '88 Crocodile Ave', 'NT', 'Australia', '800'),
+('Miami', '1400 Ocean Drive', 'FL', 'USA', '33139'),
+('Winnipeg', '75 Forks Market Rd', 'MB', 'Canada', 'R3C 4L9'),
+('Canberra', '50 Black Mountain Dr', 'ACT', 'Australia', '2601'),
+('Philadelphia', '2300 Market Street', 'PA', 'USA', '19103'),
+('Edmonton', '10223 97th Street', 'AB', 'Canada', 'T5J 0L5'),
+('Gold Coast', '100 Surf Parade', 'QLD', 'Australia', '4217'),
+('Dallas', '1700 Main Street', 'TX', 'USA', '75201'),
+('Saskatoon', '519 3rd Avenue North', 'SK', 'Canada', 'S7K 2J6'),
+('Newcastle', '45 Hunter Street', 'NSW', 'Australia', '2300'),
+('San Francisco', '1501 Haight Street', 'CA', 'USA', '94117'),
+('Regina', '2905 Gordon Road', 'SK', 'Canada', 'S4S 6H7'),
+('Cairns', '77 Esplanade', 'QLD', 'Australia', '4870'),
+('Boston', '700 Boylston Street', 'MA', 'USA', '2116'),
+('Alice Springs', '33 Todd Mall', 'NT', 'Australia', '870'),
+('Phoenix', '3400 East Sky Harbor', 'AZ', 'USA', '85034'),
+('Charlottetown', '85 Fitzroy Street', 'PE', 'Canada', 'C1A 1R6'),
+('Launceston', '15 Brisbane Street', 'TAS', 'Australia', '7250'),
+('Las Vegas', '3600 Las Vegas Blvd', 'NV', 'USA', '89109'),
+('Fredericton', '670 Queen Street', 'NB', 'Canada', 'E3B 1C2'),
+('Geelong', '100 Eastern Beach Rd', 'VIC', 'Australia', '3220'),
+('Orlando', '6000 Universal Blvd', 'FL', 'USA', '32819'),
+('Moncton', '655 Main Street', 'NB', 'Canada', 'E1C 1E8'),
+('Townsville', '17 Stanley Street', 'QLD', 'Australia', '4810'),
+('San Diego', '1100 Kettner Blvd', 'CA', 'USA', '92101'),
+('Hamilton', '123 King Street West', 'ON', 'Canada', 'L8P 4S8'),
+('Bendigo', '88 Pall Mall', 'VIC', 'Australia', '3550'),
+('Atlanta', '600 Peachtree Street', 'GA', 'USA', '30308'),
+('Kamloops', '405 Victoria Street', 'BC', 'Canada', 'V2C 2A9'),
+('Toowoomba', '53 Margaret Street', 'QLD', 'Australia', '4350'),
+('Houston', '1500 McKinney Street', 'TX', 'USA', '77010');
+
+-- Restaurants data insertion
+
+INSERT INTO Restaurants (PhoneNumber, RestaurantName, Description, Website, BusinessOwner, Pricing, ReviewsReceived, FiveStarReceived, FourStarReceived, ThreeStarReceived, TwoStarReceived, OneStarReceived, AverageRating, OpeningHours, ClosingHours, AddressID, CategoryID)
+VALUES
+('8935306737', 'Noma', 'A cozy spot where traditional recipes meet local ingredients, offering a nostalgic taste with a contemporary twist.', "www.noma.com", 'Heidi Rue', '$$', 4, 2, 1, 1, 0, 0, 4.25, "8:00", "20:00", 17, 5), 
+('8884065983', 'Osteria Francescana', 'Known for its vibrant decor and innovative fusion menu, this restaurant brings global flavors to classic dishes.', 'www.osteriafrancescana.com', 'Deborah Mcgee', '$$$', 0, 0, 0, 0, 0, 0, 0.00, '09:00', '21:00', 33, 2),
+('1231418103', 'El Celler de Can Roca', 'Features an open kitchen where chefs craft inventive dishes, celebrated for both their presentation and taste.', 'www.elcellerdecanroca.com', 'Holly Taylor', '$$$', 5, 3, 2, 1, 0, 0, 5.20, '06:00', '18:00', 45, 2),
+('3224967346', 'Mirazur', 'Offers a seasonal menu that highlights the best local produce, served in a rustic yet elegant setting.', 'www.mirazur.com', 'Samuel Ford', '$$', 4, 1, 1, 1, 0, 1, 3.25, '10:00', '19:00', 4, 7),
+('3668202096', 'Gaggan', 'A rooftop dining experience with panoramic city views, specializing in craft cocktails and small plates.', 'www.gaggan.com', 'Kristin Ramirez', '$$$', 3, 0, 0, 0, 0, 3, 1.00, '09:00', '23:00', 28, 5),
+('6211262854', 'Mugaritz', 'Renowned for its artisanal breads and pastries, this bistro serves comfort food in a relaxed, inviting atmosphere.', 'www.mugaritz.com', 'Jacob Johnson', '$$$', 0, 0, 0, 0, 0, 0, 0.00, '08:00', '20:00', 12, 5),
+('1845843989', 'Central', 'A hidden gem offering a tasting menu that takes diners on a culinary journey, paired with an exceptional wine list.', 'www.central.com', 'Casey Alexander', '$$', 4, 2, 1, 1, 0, 0, 4.25, '09:00', '21:00', 39, 2),
+('6759855579', 'The French Laundry', 'Focuses on sustainable seafood dishes, served in a chic, minimalist space that echoes the simplicity of the coast.', 'www.thefrenchlaundry.com', 'Carl Durocher', '$$$', 2, 0, 0, 0, 1, 1, 1.50, '06:00', '18:00', 8, 4),
+('8287995629', 'Alinea', 'A family-friendly venue with a playful menu that appeals to both kids and adults, featuring organic ingredients.', 'www.alinea.com', 'Felicia Brown', '$$$', 4, 1, 0, 0, 0, 3, 2.00, '10:00', '19:00', 50, 6),
+('4206121192', 'Pujol', 'A historic mansion turned restaurant, offering gourmet dishes that blend traditional flavors with modern culinary techniques.', 'www.pujol.com.mx', 'Renee Singh', '$$', 2, 0, 0, 2, 0, 0, 3.00, '09:00', '23:00', 23, 2),
+('4141694141', 'White Rabbit', 'Celebrates the art of slow cooking, serving hearty meals that are prepared with care and meant to be savored.', 'www.whiterabbit.com', 'Anushka Patel', '$$$', 4, 3, 1, 0, 0, 0, 4.75, '08:00', '20:00', 16, 4),
+('6995465618', 'Arpège', 'Features a lively bar scene and a diverse menu that includes everything from street food-inspired bites to gourmet entrees.', 'www.arpege.com', 'Ryan Watson', '$$$', 15, 10, 4, 1, 0, 0, 4.60, '09:00', '21:00', 5, 1),
+('1715185744', 'D.O.M.', 'A garden oasis in the city, this eatery specializes in health-conscious meals without sacrificing flavor.', 'www.dom.com.br', 'Victor Walker', '$$', 4, 2, 2, 0, 0, 0, 4.50, '06:00', '18:00', 41, 1),
+('9222579530', 'Maido', "Offers an intimate dining experience with a fixed menu that changes daily, highlighting the chef's creativity and seasonal ingredients.", 'www.maido.com', 'Sara Smith', '$$$', 3, 2, 1, 0, 0, 0, 4.67, '10:00', '19:00', 30, 2),
+('4557263852', 'Le Bernardin', 'Known for its bold flavors and spicy dishes, this restaurant offers a modern take on traditional cuisine, complemented by a stylish, contemporary decor.', 'www.le-bernardin.com', 'Emma Legault', '$$$', 5, 4, 1, 0, 0, 0, 4.80, '09:00', '23:00', 36, 3),
+('9236452630', 'Ultraviolet by Paul Pairet', 'Boasts a large terrace for al fresco dining, serving Mediterranean-inspired dishes alongside a selection of fine wines.', 'www.ultravioletbypaulpairet.com', 'Stefanie Estrada', '$$', 4, 4, 0, 0, 0, 0, 5.00, '08:00', '20:00', 26, 5),
+('8026535105', 'Narisawa', 'A minimalist cafe known for its exceptional coffee, artisan sandwiches, and a warm, welcoming vibe.', 'www.narisawa.com', 'Ella Yamamoto', '$$$', 5, 0, 0, 0, 4, 1, 1.80, '09:00', '21:00', 49, 1),
+('9306399547', 'Steirereck', 'Specializes in wood-fired cooking, giving a smoky depth to both its meat-centric dishes and vegetable offerings.', 'www.steirereck.com.at', 'Joseph Marshall', '$$$', 3, 0, 0, 0, 2, 1, 1.67, '06:00', '18:00', 2, 4),
+('8555071659', 'Asador Etxebarri', 'Offers a fusion of local and international cuisines in a sophisticated, modern setting with an emphasis on organic produce.', 'www.asadoretxebarri.com', 'Kimberly Gonzalez', '$$', 6, 5, 1, 0, 0, 0, 4.83, '10:00', '19:00', 19, 3),
+('9034834870', "Lucille's", 'Features handcrafted pasta dishes served in a cozy, candlelit space, ideal for romantic evenings or small gatherings.', 'www.lucilles.ca', 'Ema Zamorano', '$$$', 5, 5, 0, 0, 0, 0, 5.00, '09:00', '23:00', 37, 1),
+('1197825620', 'The Ledbury', 'A lively tapas bar that encourages sharing with its eclectic mix of small plates, perfect for a casual night out.', 'www.theledbury.com', 'Elizabeth Scott', '$$$', 4, 2, 2, 0, 0, 0, 4.50, '08:00', '20:00', 14, 1),
+('5735348560', 'Test Kitchen', 'Serves up classic comfort food with a gourmet twist, making it a go-to spot for satisfying any craving.', 'www.testkitchen.com', 'Kenneth Lawrence', '$$', 6, 5, 1, 0, 0, 0, 4.83, '09:00', '21:00', 48, 1),
+('2946829401', 'Den', 'An upscale establishment known for its meticulous service and a menu that blends classic techniques with avant-garde presentations.', 'www.den.com', 'Patrick Brady', '$$$', 4, 2, 2, 0, 0, 0, 4.50, '06:00', '18:00', 7, 2),
+('9433977735', "L'Astrance", 'Specializes in farm-to-table dining, with a menu that reflects the seasons and supports local farmers and artisans.', 'www.lastrance.com', 'William Perry', '$$$', 3, 3, 0, 0, 0, 0, 5.00, '10:00', '19:00', 20, 1),
+('9404485093', 'Vendôme', 'Offers a unique dining experience with dishes inspired by street food from around the globe, set in an art-filled, eclectic space.', 'www.vendome.com', 'Lucas Bureau', '$$$$$', 5, 2, 1, 1, 1, 0, 3.80, '09:00', '23:00', 22, 4),
+('6086333459', 'Restaurant Frantzén', 'A sleek, modern restaurant that focuses on clean eating, featuring a menu full of vibrant, nutrient-rich dishes.', 'www.restaurantfrantzen.com', 'Monica Hardy', '$$$', 4, 3, 1, 0, 0, 0, 4.75, '08:00', '20:00', 35, 1),
+('6985208498', 'Quique Dacosta', 'Renowned for its expansive breakfast and brunch menu, this spot turns morning meals into a culinary delight.', 'www.quiquedacosta.com', 'Lacey Griffin', '$$$', 3, 0, 0, 0, 0, 0, 0.00, '09:00', '21:00', 46, 1),
+('3693247832', 'Blue Hill at Stone Barns', 'A gastropub offering a wide selection of craft beers and upscale pub fare, set in a historic building with a cozy, vintage vibe.', 'www.bluehillatstonebarns.com', 'Nima Sharma', '$$', 6, 4, 2, 0, 0, 0, 4.67, '06:00', '18:00', 44, 1),
+('8432753364', 'Piazza Duomo', 'Features a menu that combines exotic flavors with local favorites, served in a laid-back, beach-inspired setting.', 'www.piazzaduomoalba.com', 'Gerónimo Menendez (Spanish)', '$$$$$', 5, 2, 1, 1, 1, 0, 3.80, '10:00', '19:00', 34, 3),
+('2764491059', 'Elkano', 'Known for its elegant afternoon tea service, this spot offers a selection of fine teas, sandwiches, and pastries in a serene setting.', 'www.elkano.com', 'Carlos Avila', '$$$', 4, 3, 0, 0, 1, 0, 4.25, '09:00', '23:00', 21, 1),
+('1905066459', 'Le Calandre', 'A waterfront restaurant offering breathtaking views and a menu that specializes in fresh, locally sourced seafood.', 'www.lecalandre.com', 'Taylor Blevins', '$$', 3, 1, 2, 0, 0, 0, 4.33, '08:00', '20:00', 31, 4),
+('1991273364', 'De Librije', 'A lively venue that blends a casual dining experience with live music, known for its burgers and classic American dishes.', 'www.librije.com', 'Colleen Wilkins', '$$$', 8, 3, 2, 2, 1, 0, 3.88, '09:00', '21:00', 25, 1),
+('4757471005', 'Dinner by Heston Blumenthal', 'Offers a minimalist, Zen-like ambiance where guests can enjoy beautifully prepared sushi and other Japanese delicacies.', 'www.dinnerbyheston.com', 'Timothy Wallace', '$$$', 0, 0, 0, 0, 0, 0, 0.00, '06:00', '18:00', 3, 3),
+('8378337592', 'Sühring', 'A chic wine bar with an impressive selection of global wines paired with small plates that highlight artisanal ingredients.', 'www.suhring.com', 'Ricky Brooks', '$$', 3, 1, 1, 1, 0, 0, 4.00, '10:00', '19:00', 27, 1),
+('4238848496', 'Relae', 'Specializes in spicy, aromatic dishes that bring the heat and flavor of their country of origin to your plate.', 'www.relae.com', 'Elizabeth Tate', '$$$', 3, 1, 2, 0, 0, 0, 4.33, '09:00', '23:00', 13, 3),
+('2557683484', 'Attica', 'A quaint cafe that serves up homemade soups, salads, and sandwiches, perfect for a quick, healthy meal.', 'www.attica.com.au', 'Juan Russo', '$$$', 5, 5, 0, 0, 0, 0, 5.00, '08:00', '20:00', 42, 1),
+('1296998395', 'Tim Raue', 'Known for its expansive buffet that offers a variety of international cuisines, allowing diners to sample dishes from around the world.', 'www.timraue.com', 'Amber Garcia', '$$', 4, 4, 0, 0, 0, 0, 5.00, '09:00', '21:00', 6, 4),
+('3398636293', 'Gastrologik', 'A fine dining establishment that prides itself on its white-glove service and a menu of luxurious, indulgent dishes.', 'www.gastrologik.com', 'Ian Stevens', '$$$', 6, 3, 3, 0, 0, 0, 4.50, '06:00', '18:00', 10, 2),
+('3718415986', 'Le Chateaubriand', 'A trendy spot that offers inventive cocktails and a vibrant atmosphere, making it a popular choice for late-night dining.', 'www.lechateaubriand.com', 'Timothy Edwards', '$$$', 3, 2, 1, 0, 0, 0, 4.67, '10:00', '19:00', 43, 1),
+('7843955843', 'Lung King Heen', 'Features a large, outdoor dining area where guests can enjoy live cooking stations and a festive, communal atmosphere.', 'www.lungkingheen.com', 'Angel Mitchell', '$$', 3, 1, 1, 1, 0, 0, 4.00, '09:00', '23:00', 11, 1),
+('3047911175', 'Per Se', 'A boutique bakery that serves up freshly baked goods and light lunches, known for its cozy, comforting ambiance.', 'www.perse.com', 'Kristen Robinson', '$$$', 4, 2, 2, 0, 0, 0, 4.50, '08:00', '20:00', 1, 5),
+('6032863847', 'Hof Van Cleve', 'Specializes in hot, hearty stews and soups that are perfect for warming up during the colder months.', 'www.hofvancleve.com', 'Micheal Smith', '$$$', 2, 0, 1, 1, 0, 0, 3.50, '09:00', '21:00', 32, 1),
+('9292697152', 'The Clove Club', 'Offers a sleek, modern take on traditional sushi, with creative rolls and a selection of sake served in a minimalist setting.', 'www.thecloveclub.com', 'Michael Carroll', '$$$', 4, 4, 0, 0, 0, 0, 5.00, '06:00', '18:00', 24, 3),
+('6373895645', 'Olympe', 'A casual diner that brings back the classics, offering a menu of nostalgic favorites in a retro-inspired space.', 'www.olympe.com.br', 'Teresa Erickson', '$$$', 6, 0, 0, 0, 4, 2, 1.67, '10:00', '19:00', 47, 1),
+('1765966328', 'Tickets', 'Known for its live jazz nights and a menu of sophisticated dishes, this spot offers an elegant dining experience.', 'www.tickets.com', 'William Lambert', '$$$', 7, 4, 0, 0, 3, 0, 3.71, '09:00', '23:00', 15, 1),
+('5996233325', 'Zuma', 'Specializes in hand-tossed pizzas with a variety of unique toppings, served in a lively, family-friendly environment.', 'www.zumarestaurant.com', 'Sydney Baker', '$$', 0, 0, 0, 0, 0, 0, 0.00, '08:00', '20:00', 40, 1),
+('7054276186', 'Odette', 'A high-end steakhouse offering aged cuts of meat and a refined dining experience, with a focus on quality and precision.', 'www.odetterestaurant.com', 'Dustin Bruce', '$$$', 4, 0, 0, 0, 0, 4, 1.00, '09:00', '21:00', 9, 2),
+('9599327204', 'n/naka', 'Features a greenhouse dining room where guests can enjoy fresh, botanical-inspired dishes in a lush, verdant setting.', 'www.n-naka.com', 'Julia Pitts', '$$$', 4, 0, 0, 0, 1, 3, 1.25, '06:00', '18:00', 18, 1),
+('3981435086', 'Jungsik', 'A bustling brasserie that serves a mix of classic and contemporary dishes, known for its dynamic atmosphere and chic design.', 'www.jungsik.com', 'Thomas Williamson', '$$', 5, 5, 0, 0, 0, 0, 5.00, '10:00', '19:00', 29, 1),
+('7154922252', 'Mikla', 'Offers a discreet, speakeasy-style dining experience with an emphasis on creative cocktails and small, shareable plates.', 'www.miklarestaurant.com', 'Michael Austin', '$$$', 2, 1, 1, 0, 0, 0, 4.50, '09:00', '23:00', 38, 1);
+
+-- Users data insertion
+
+INSERT INTO Users (Username, Password, Email, FirstName, LastName, ProfilePicture, RegistrationDate, NumFollowers, NumFollowing, CityLocated, CountryLocated) 
+VALUES 
+('johnsmith', 'Passw0rdJohn', 'johnsmith@yahoo.ca', 'John', 'Smith', 'johnsmith.jpg', '2020-01-31', 54, 26, 'Los Angeles', 'USA'),
+('emilyjohnson', 'Em1ly@Johnson', 'emilyjohnson@gmail.com', 'Emily', 'Johnson', 'emilyjohnson.jpg', '2020-02-06', 120, 40, 'Montreal', 'Canada'),
+('michaelwilliams', 'M1chael_W1ll1ams', 'michaelwilliams@hotmail.com', 'Michael', 'Williams', 'michaelwilliams.jpg', '2020-03-02', 11, 24, 'Melbourne', 'Australia'),
+('sarahbrown', '$arahBr0wn', 'sarahbrown@yahoo.com', 'Sarah', 'Brown', 'sarahbrown.jpg', '2020-03-12', 0, 13, 'Manchester', 'UK'),
+('davidjones', 'Dav1dJ0n3$', 'davidjones@gmail.com', 'David', 'Jones', 'davidjones.jpg', '2020-03-19', 23, 0, 'Paris', 'France'),
+('jessicagarcia', 'J3ss!caGarc!a', 'jessicagarcia@outlook.com', 'Jessica', 'Garcia', 'jessicagarcia.jpg', '2020-03-30', 141, 24, 'Chicago', 'USA'),
+('danielmartinez', 'Mart1nez#Dan!el', 'danielmartinez@yahoo.ca', 'Daniel', 'Martinez', 'danielmartinez.jpg', '2020-04-13', 95, 45, 'London', 'UK'),
+('laurenrobinson', 'LaurenR0b!n$0n', 'laurenrobinson@gmail.com', 'Lauren', 'Robinson', 'laurenrobinson.jpg', '2020-04-14', 33, 0, 'Sydney', 'Australia'),
+('williamclark', 'W1ll!am.Clark', 'williamclark@hotmail.com', 'William', 'Clark', 'williamclark.jpg', '2020-04-18', 67, 67, 'New York City', 'USA'),
+('ashleyrodriguez', '@shl3yR0dr!gu3z', 'ashleyrodriguez@yahoo.com', 'Ashley', 'Rodriguez', 'ashleyrodriguez.jpg', '2020-04-21', 109, 100, 'Paris', 'France'),
+('jamestaylor', 'Jam3sT4yl0r!', 'jamestaylor@gmail.com', 'James', 'Taylor', 'jamestaylor.jpg', '2020-04-30', 6, 47, 'Manchester', 'UK'),
+('olivialewis', 'Ol!v!a#Lew!$', 'olivialewis@outlook.com', 'Olivia', 'Lewis', 'olivialewis.jpg', '2020-05-14', 129, 3, 'Los Angeles', 'USA'),
+('benjaminlee', 'Benjam!n!ee', 'benjaminlee@yahoo.ca', 'Benjamin', 'Lee', 'benjaminlee.jpg', '2020-05-14', 43, 26, 'Brisbane', 'Australia'),
+('emmawalker', 'EmmaWa1k3r!', 'emmawalker@gmail.com', 'Emma', 'Walker', 'emmawalker.jpg', '2020-05-18', 1, 40, 'Montreal', 'Canada'),
+('ethanhall', '3th@nH@ll', 'ethanhall@hotmail.com', 'Ethan', 'Hall', 'ethanhall.jpg', '2020-05-26', 17, 24, 'Melbourne', 'Australia'),
+('miaallen', 'M!a*ll3n', 'miaallen@yahoo.com', 'Mia', 'Allen', 'miaallen.jpg', '2020-06-02', 101, 13, 'London', 'UK'),
+('alexanderyoung', 'Al3xand3rY0ung', 'alexanderyoung@gmail.com', 'Alexander', 'Young', 'alexanderyoung.jpg', '2020-06-08', 47, 0, 'Chicago', 'USA'),
+('sophiahernandez', '$oph!aH3rnand3z', 'sophiahernandez@hotmail.com', 'Sophia', 'Gray', 'sophiahernandez.jpg', '2020-06-10', 73, 67, 'Vancouver', 'Canada'),
+('aidenking', 'A!denK!ng!', 'aidenking@yahoo.ca', 'Aiden', 'Ramirez', 'aidenking.jpg', '2020-06-13', 134, 100, 'Manchester', 'UK'),
+('chloewright', 'Chl03Wr!ght', 'chloewright@gmail.com', 'Chloe', 'James', 'chloewright.jpg', '2020-06-15', 26, 47, 'Los Angeles', 'USA'),
+('jacksonlopez', 'J@ck$onL0pez', 'jacksonlopez@outlook.com', 'Jackson', 'Brooks', 'jacksonlopez.jpg', '2020-07-09', 58, 109, 'New York City', 'USA'),
+('evelynhill', '3v3lyn.H!ll', 'evelynhill@yahoo.com', 'Evelyn', 'Kelly', 'evelynhill.jpg', '2020-07-19', 85, 6, 'Brisbane', 'Australia'),
+('sebastianscott', 'Sc3b@st!@n$cott', 'sebastianscott@gmail.com', 'Sebastian', 'Price', 'sebastianscott.jpg', '2020-07-19', 14, 129, 'Melbourne', 'Australia'),
+('harpergreen', 'H@rp3rgre3n', 'harpergreen@hotmail.com', 'Harper', 'Bennett', 'harpergreen.jpg', '2020-07-21', 118, 3, 'London', 'UK'),
+('ariaadams', 'Ari@Ad@m$', 'ariaadams@yahoo.ca', 'Aria', 'Wood', 'ariaadams.jpg', '2020-07-27', 3, 26, 'Chicago', 'USA'),
+('mateobaker', 'M@t30B@k3r', 'mateobaker@gmail.com', 'Mateo', 'Barnes', 'mateobaker.jpg', '2020-08-02', 68, 36, 'Paris', 'France'),
+('rileygonzalez', 'R!l3y_Gonz@l3z', 'rileygonzalez@hotmail.com', 'Riley', 'Ross', 'rileygonzalez.jpg', '2020-08-19', 112, 69, 'Manchester', 'UK'),
+('leahnelson', 'L3@h.N3lson', 'leahnelson@yahoo.com', 'Leah', 'Henderson', 'leahnelson.jpg', '2020-09-07', 37, 4, 'Los Angeles', 'USA'),
+('jackcarter', 'J@ckC@rt3r', 'jackcarter@gmail.com', 'Jack', 'Coleman', 'jackcarter.jpg', '2020-10-29', 77, 100, 'Montreal', 'Canada'),
+('zoeperez', 'Z03P3r3z', 'zoeperez@outlook.com', 'Zoe', 'Perry', 'zoeperez.jpg', '2020-11-26', 9, 46, 'Sydney', 'Australia'),
+('lilyturner', 'L!lyTurn3r', 'lilyturner@yahoo.ca', 'Lily', 'Powell', 'lilyturner.jpg', '2021-01-19', 125, 108, 'Brisbane', 'Australia'),
+('lincolncruz', 'L!nc0ln.Cruz', 'lincolncruz@gmail.com', 'Lincoln', 'Long', 'lincolncruz.jpg', '2021-02-05', 61, 20, 'Melbourne', 'Australia'),
+('victoriaprice', 'V!ctor!@Pr!c3', 'victoriaprice@hotmail.com', 'Victoria', 'Patterson', 'victoriaprice.jpg', '2021-02-21', 145, 72, 'London', 'UK'),
+('nolanhughes', 'N0l@n_Hugh3$', 'nolanhughes@yahoo.com', 'Nolan', 'Hughes', 'nolanhughes.jpg', '2021-02-27', 28, 130, 'Chicago', 'USA'),
+('elenaflores', '3len@Flor3$', 'elenaflores@gmail.com', 'Elena', 'Flores', 'elenaflores.jpg', '2021-03-04', 96, 59, 'Paris', 'France'),
+('noahwashington', 'noahwashington@123', 'noahwashington@gmail.com', 'Noah', 'Washington', 'noahwashington.jpg', '2021-03-05', 39, 114, 'Manchester', 'UK'),
+('avabutler', 'avabutler#456', 'avabutler@yahoo.com', 'Ava', 'Butler', 'avabutler.jpg', '2021-03-11', 72, 30, 'Los Angeles', 'USA'),
+('liamsimmons', 'liamsimmons!789', 'liamsimmons@hotmail.com', 'Liam', 'Simmons', 'liamsimmons.jpg', '2021-03-18', 7, 70, 'Montreal', 'Canada'),
+('sophiafoster', 'sophiafoster$123', 'sophiafoster@outlook.com', 'Sophia', 'Foster', 'sophiafoster.jpg', '2021-03-19', 138, 10, 'New York City', 'USA'),
+('ethangonzales', 'ethangonzales%456', 'ethangonzales@aol.com', 'Ethan', 'Gonzales', 'ethangonzales.jpg', '2021-03-26', 56, 133, 'Sydney', 'Australia'),
+('isabellabryant', 'isabellabryant^789', 'isabellabryant@icloud.com', 'Isabella', 'Bryant', 'isabellabryant.jpg', '2021-03-29', 103, 86, 'Brisbane', 'Australia'),
+('masonalexander', 'masonalexander&123', 'masonalexander@protonmail.com', 'Mason', 'Alexander', 'masonalexander.jpg', '2021-04-01', 19, 53, 'Melbourne', 'Australia'),
+('miarussell', 'miarussell*456', 'miarussell@yandex.com', 'Mia', 'Russell', 'miarussell.jpg', '2021-04-08', 132, 145, 'London', 'UK'),
+('jamesgriffin', 'jamesgriffin(789)', 'jamesgriffin@zoho.com', 'James', 'Griffin', 'jamesgriffin.jpg', '2021-04-16', 81, 12, 'Chicago', 'USA'),
+('charlottediaz', 'charlottediaz)123', 'charlottediaz@mail.com', 'Charlotte', 'Diaz', 'charlottediaz.jpg', '2021-04-27', 50, 97, 'Paris', 'France'),
+('benjaminhayes', 'benjaminhayes-456', 'benjaminhayes@live.com', 'Benjamin', 'Hayes', 'benjaminhayes.jpg', '2021-05-02', 123, 45, 'Manchester', 'UK'),
+('ameliasanchez', 'ameliasanchez=789', 'ameliasanchez@inbox.com', 'Amelia', 'Sanchez', 'ameliasanchez.jpg', '2021-05-06', 31, 122, 'Los Angeles', 'USA'),
+('williammartin', 'williammartin+123', 'williammartin@fastmail.com', 'William', 'Martin', 'williammartin.jpg', '2021-05-07', 80, 27, 'Montreal', 'Canada'),
+('harpergomez', 'harpergomez{456}', 'harpergomez@gmx.com', 'Harper', 'Gomez', 'harpergomez.jpg', '2021-05-22', 16, 74, 'Vancouver', 'Canada'),
+('olivermurray', 'olivermurray}789', 'olivermurray@tutanota.com', 'Oliver', 'Murray', 'olivermurray.jpg', '2021-05-22', 111, 2, 'Sydney', 'Australia'),
+('evelynkim', 'evelynkim[123]', 'evelynkim@rediffmail.com', 'Evelyn', 'Kim', 'evelynkim.jpg', '2021-05-27', 35, 116, 'Brisbane', 'Australia'),
+('jacobnguyen', 'jacobnguyen]456', 'jacobnguyen@rocketmail.com', 'Jacob', 'Nguyen', 'jacobnguyen.jpg', '2021-06-02', 64, 40, 'Melbourne', 'Australia'),
+('abigailjackson', 'abigailjackson:789:', 'abigailjackson@yandex.com', 'Abigail', 'Jackson', 'abigailjackson.jpg', '2021-06-10', 0, 24, 'London', 'UK'),
+('elijahthompson', 'elijahthompson;123;', 'elijahthompson@protonmail.com', 'Elijah', 'Thompson', 'elijahthompson.jpg', '2021-06-16', 148, 13, 'Chicago', 'USA'),
+('emilywhite', 'emilywhite<456<', 'emilywhite@icloud.com', 'Emily', 'White', 'emilywhite.jpg', '2021-06-20', 42, 0, 'Paris', 'France'),
+('alexanderlopez', 'alexanderlopez>789>', 'alexanderlopez@zoho.com', 'Alexander', 'Lopez', 'alexanderlopez.jpg', '2021-07-03', 91, 24, 'Manchester', 'UK'),
+('elizabethlee', 'elizabethlee,123,', 'elizabethlee@mail.com', 'Elizabeth', 'Lee', 'elizabethlee.jpg', '2021-07-07', 21, 45, 'Los Angeles', 'USA'),
+('michaelharris', 'michaelharris.456.', 'michaelharris@outlook.com', 'Michael', 'Harris', 'michaelharris.jpg', '2021-07-11', 128, 0, 'Montreal', 'Canada'),
+('sofiaclark', 'sofiaclark?789?', 'sofiaclark@hotmail.com', 'Sofia', 'Clark', 'sofiaclark.jpg', '2021-07-15', 71, 67, 'New York City', 'USA'),
+('lucaslewis', 'lucaslewis|123|', 'lucaslewis@gmail.com', 'Lucas', 'Lewis', 'lucaslewis.jpg', '2021-07-21', 102, 100, 'Sydney', 'Australia'),
+('averyrobinson', 'averyrobinson/456/', 'averyrobinson@yahoo.com', 'Avery', 'Robinson', 'averyrobinson.jpg', '2021-07-26', 55, 47, 'Brisbane', 'Australia'),
+('henrywalker', 'henrywalker"789"', 'henrywalker@hotmail.com', 'Henry', 'Walker', 'henrywalker.jpg', '2021-08-03', 26, 0, 'Melbourne', 'Australia'),
+('ellahall', 'ellahall\'123\'', 'ellahall@outlook.com', 'Ella', 'Hall', 'ellahall.jpg', '2021-08-12', 135, 67, 'London', 'UK'),
+('danielallen', 'danielallen@456@', 'danielallen@yahoo.com', 'Daniel', 'Allen', 'danielallen.jpg', '2021-08-14', 67, 113, 'Chicago', 'USA'),
+('scarlettyoung', 'scarlettyoung#789#', 'scarlettyoung@gmail.com', 'Scarlett', 'Young', 'scarlettyoung.jpg', '2021-08-17', 113, 29, 'Paris', 'France'),
+('matthewhernandez', 'matthewhernandez!123!', 'matthewhernandez@hotmail.com', 'Matthew', 'Hernandez', 'matthewhernandez.jpg', '2021-08-19', 29, 63, 'Manchester', 'UK'),
+('graceking', 'graceking$456$', 'graceking@yahoo.com', 'Grace', 'King', 'graceking.jpg', '2021-08-27', 63, 140, 'Los Angeles', 'USA'),
+('jacksonwright', 'jacksonwright^789^', 'jacksonwright@gmail.com', 'Jackson', 'Wright', 'jacksonwright.jpg', '2021-09-03', 140, 15, 'Montreal', 'Canada'),
+('chloescott', 'chloescott&123&', 'chloescott@outlook.com', 'Chloe', 'Scott', 'chloescott.jpg', '2021-09-05', 15, 87, 'Vancouver', 'Canada'),
+('sebastiangreen', 'sebastiangreen*456*', 'sebastiangreen@hotmail.com', 'Sebastian', 'Green', 'sebastiangreen.jpg', '2021-09-09', 87, 48, 'Sydney', 'Australia'),
+('victoriaadams', 'victoriaadams(789)', 'victoriaadams@gmail.com', 'Victoria', 'Adams', 'victoriaadams.jpg', '2021-09-14', 48, 105, 'Brisbane', 'Australia'),
+('aidenbaker', 'aidenbaker)123)', 'aidenbaker@yahoo.com', 'Aiden', 'Baker', 'aidenbaker.jpg', '2021-09-19', 105, 1, 'Melbourne', 'Australia'),
+('rileygonzalez', 'rileygonzalez-456-', 'rileygonzalez@hotmail.com', 'Riley', 'Gonzalez', 'rileygonzalez.jpg', '2021-09-20', 1, 119, 'London', 'UK'),
+('davidnelson', 'davidnelson=789=', 'davidnelson@gmail.com', 'David', 'Nelson', 'davidnelson.jpg', '2021-09-26', 119, 38, 'Chicago', 'USA'),
+('lilycarter', 'lilycarter+123+', 'lilycarter@outlook.com', 'Lily', 'Carter', 'lilycarter.jpg', '2021-09-30', 38, 76, 'Paris', 'France'),
+('loganmitchell', 'loganmitchell{456}', 'loganmitchell@yahoo.com', 'Logan', 'Mitchell', 'loganmitchell.jpg', '2021-10-02', 76, 5, 'Manchester', 'UK'),
+('zoeyperez', 'zoeyperez}789}', 'zoeyperez@hotmail.com', 'Zoey', 'Perez', 'zoeyperez.jpg', '2021-10-03', 5, 131, 'Los Angeles', 'USA'),
+('jaydenroberts', 'jaydenroberts[123]', 'jaydenroberts@gmail.com', 'Jayden', 'Roberts', 'jaydenroberts.jpg', '2021-10-07', 131, 92, 'Montreal', 'Canada'),
+('laylaturner', 'laylaturner]456[', 'laylaturner@yahoo.com', 'Layla', 'Turner', 'laylaturner.jpg', '2021-10-08', 92, 57, 'New York City', 'USA'),
+('carterphillips', 'carterphillips:789:', 'carterphillips@hotmail.com', 'Carter', 'Phillips', 'carterphillips.jpg', '2021-10-23', 57, 141, 'Sydney', 'Australia'),
+('noracampbell', 'noracampbell;123;', 'noracampbell@gmail.com', 'Nora', 'Campbell', 'noracampbell.jpg', '2021-10-29', 141, 22, 'Brisbane', 'Australia'),
+('gabrielparker', 'gabrielparker<456<', 'gabrielparker@yahoo.com', 'Gabriel', 'Parker', 'gabrielparker.jpg', '2021-10-30', 22, 124, 'Melbourne', 'Australia'),
+('milaevans', 'milaevans>789>', 'milaevans@hotmail.com', 'Mila', 'Evans', 'milaevans.jpg', '2021-11-04', 124, 52, 'London', 'UK'),
+('samueledwards', 'samueledwards?123?', 'samueledwards@gmail.com', 'Samuel', 'Edwards', 'samueledwards.jpg', '2021-11-05', 52, 82, 'Chicago', 'USA'),
+('aubreycollins', 'aubreycollins|456|', 'aubreycollins@yahoo.com', 'Aubrey', 'Collins', 'aubreycollins.jpg', '2021-11-10', 82, 25, 'Paris', 'France'),
+('ryanstewart', 'ryanstewart/789/', 'ryanstewart@hotmail.com', 'Ryan', 'Stewart', 'ryanstewart.jpg', '2021-11-11', 25, 146, 'Manchester', 'UK'),
+('penelopesanchez', 'penelopesanchez"123"', 'penelopesanchez@gmail.com', 'Penelope', 'Sanchez', 'penelopesanchez.jpg', '2021-11-22', 146, 36, 'Los Angeles', 'USA'),
+('lukemorris', 'lukemorris\'456\'', 'lukemorris@yahoo.com', 'Luke', 'Morris', 'lukemorris.jpg', '2021-11-25', 36, 69, 'Montreal', 'Canada'),
+('hannahrogers', 'hannahrogers@789@', 'hannahrogers@hotmail.com', 'Hannah', 'Rogers', 'hannahrogers.jpg', '2021-11-27', 69, 4, 'Vancouver', 'Canada'),
+('dylanreed', 'dylanreed#123#', 'dylanreed@gmail.com', 'Dylan', 'Reed', 'dylanreed.jpg', '2021-12-08', 4, 100, 'Sydney', 'Australia'),
+('lilliancook', 'lilliancook$456$', 'lilliancook@yahoo.com', 'Lillian', 'Cook', 'lilliancook.jpg', '2021-12-11', 100, 46, 'Brisbane', 'Australia'),
+('owenmorgan', 'owenmorgan^789^', 'owenmorgan@hotmail.com', 'Owen', 'Morgan', 'owenmorgan.jpg', '2021-12-15', 46, 108, 'Melbourne', 'Australia'),
+('addisonbell', 'addisonbell&123&', 'addisonbell@gmail.com', 'Addison', 'Bell', 'addisonbell.jpg', '2021-12-16', 108, 20, 'London', 'UK'),
+('jackmurphy', 'jackmurphy*456*', 'jackmurphy@yahoo.com', 'Jack', 'Murphy', 'jackmurphy.jpg', '2021-12-17', 20, 72, 'Chicago', 'USA'),
+('nataliebailey', 'nataliebailey(789)', 'nataliebailey@hotmail.com', 'Natalie', 'Bailey', 'nataliebailey.jpg', '2021-12-18', 72, 130, 'Paris', 'France'),
+('lukerivera', 'lukerivera)123)', 'lukerivera@gmail.com', 'Luke', 'Rivera', 'lukerivera.jpg', '2021-12-30', 130, 59, 'Manchester', 'UK'),
+('annacooper', 'annacooper-456-', 'annacooper@yahoo.com', 'Anna', 'Cooper', 'annacooper.jpg', '2022-01-05', 59, 114, 'Los Angeles', 'USA'),
+('calebrichardson', 'calebrichardson=789=', 'calebrichardson@hotmail.com', 'Caleb', 'Richardson', 'calebrichardson.jpg', '2022-01-09', 114, 30, 'Montreal', 'Canada'),
+('leahcox', 'leahcox+123+', 'leahcox@gmail.com', 'Leah', 'Cox', 'leahcox.jpg', '2022-01-16', 30, 70, 'New York City', 'USA'),
+('isaachoward', 'isaachoward{456}', 'isaachoward@yahoo.com', 'Isaac', 'Howard', 'isaachoward.jpg', '2022-01-20', 70, 10, 'Sydney', 'Australia'),
+('savannahward', 'savannahward}789}', 'savannahward@hotmail.com', 'Savannah', 'Ward', 'savannahward.jpg', '2022-01-21', 10, 133, 'Brisbane', 'Australia'),
+('natantorres', 'natantorres[123]', 'natantorres@gmail.com', 'Nathan', 'Torres', 'natantorres.jpg', '2022-01-21', 133, 86, 'Melbourne', 'Australia'),
+('brooklynpeterson', 'brooklynpeterson]456[', 'brooklynpeterson@yahoo.com', 'Brooklyn', 'Peterson', 'brooklynpeterson.jpg', '2022-01-24', 86, 53, 'London', 'UK'),
+('connorgray', 'connorgray:789:', 'connorgray@hotmail.com', 'Connor', 'Gray', 'connorgray.jpg', '2022-01-29', 53, 145, 'Chicago', 'USA'),
+('stellaramirez', 'stellaramirez;123;', 'stellaramirez@gmail.com', 'Stella', 'Ramirez', 'stellaramirez.jpg', '2022-02-01', 145, 12, 'Paris', 'France'),
+('elijames', 'elijames<456<', 'elijames@yahoo.com', 'Eli', 'James', 'elijames.jpg', '2022-02-08', 12, 97, 'Manchester', 'UK'),
+('violetwatson', 'violetwatson>789>', 'violetwatson@hotmail.com', 'Violet', 'Watson', 'violetwatson.jpg', '2022-02-12', 97, 45, 'Los Angeles', 'USA'),
+('isaiahbrooks', 'isaiahbrooks?123?', 'isaiahbrooks@gmail.com', 'Isaiah', 'Brooks', 'isaiahbrooks.jpg', '2022-02-13', 45, 122, 'Montreal', 'Canada'),
+('elliekelly', 'elliekelly|456|', 'elliekelly@yahoo.com', 'Ellie', 'Kelly', 'elliekelly.jpg', '2022-03-04', 122, 27, 'Vancouver', 'Canada'),
+('juliansanders', 'juliansanders/789/', 'juliansanders@hotmail.com', 'Julian', 'Sanders', 'juliansanders.jpg', '2022-03-09', 27, 74, 'Sydney', 'Australia'),
+('claireprice', 'claireprice"123"', 'claireprice@gmail.com', 'Claire', 'Price', 'claireprice.jpg', '2022-03-13', 74, 2, 'Brisbane', 'Australia'),
+('hunterbennett', "hunterbennett'456'", 'hunterbennett@yahoo.com', 'Hunter', 'Bennett', 'hunterbennett.jpg', '2022-03-27', 2, 116, 'Melbourne', 'Australia'),
+('lucywood', 'lucywood@789@', 'lucywood@hotmail.com', 'Lucy', 'Wood', 'lucywood.jpg', '2022-03-29', 116, 40, 'London', 'UK'),
+('cameronbarnes', 'cameronbarnes#123#', 'cameronbarnes@gmail.com', 'Cameron', 'Barnes', 'cameronbarnes.jpg', '2022-04-09', 40, 90, 'Chicago', 'USA'),
+('audreyross', 'audreyross$456$', 'audreyross@yahoo.com', 'Audrey', 'Ross', 'audreyross.jpg', '2022-04-19', 90, 8, 'Paris', 'France'),
+('levihenderson', 'levihenderson^789^', 'levihenderson@hotmail.com', 'Levi', 'Henderson', 'levihenderson.jpg', '2022-04-20', 8, 139, 'Manchester', 'UK'),
+('skylarcoleman', 'skylarcoleman&123&', 'skylarcoleman@gmail.com', 'Skylar', 'Coleman', 'skylarcoleman.jpg', '2022-04-30', 139, 65, 'Los Angeles', 'USA'),
+('aaronjenkins', 'aaronjenkins*456*', 'aaronjenkins@yahoo.com', 'Aaron', 'Jenkins', 'aaronjenkins.jpg', '2022-05-09', 65, 149, 'Montreal', 'Canada'),
+('paisleyperry', 'paisleyperry(789)', 'paisleyperry@hotmail.com', 'Paisley', 'Perry', 'paisleyperry.jpg', '2022-05-17', 149, 32, 'New York City', 'USA'),
+('charlespowell', 'charlespowell)123)', 'charlespowell@gmail.com', 'Charles', 'Powell', 'charlespowell.jpg', '2022-05-21', 32, 78, 'Sydney', 'Australia'),
+('arianalong', 'arianalong-456-', 'arianalong@yahoo.com', 'Ariana', 'Long', 'arianalong.jpg', '2022-05-23', 78, 107, 'Brisbane', 'Australia'),
+('thomaspatterson', 'thomaspatterson=789=', 'thomaspatterson@hotmail.com', 'Thomas', 'Patterson', 'thomaspatterson.jpg', '2022-06-06', 107, 18, 'Melbourne', 'Australia'),
+('bellahughes', 'bellahughes+123+', 'bellahughes@gmail.com', 'Bella', 'Hughes', 'bellahughes.jpg', '2022-06-07', 18, 93, 'London', 'UK'),
+('jordanflores', 'jordanflores{456}', 'jordanflores@yahoo.com', 'Jordan', 'Flores', 'jordanflores.jpg', '2022-06-16', 93, 49, 'Chicago', 'USA'),
+('alexawashington', 'alexawashington}789}', 'alexawashington@hotmail.com', 'Alexa', 'Washington', 'alexawashington.jpg', '2022-07-18', 49, 126, 'Paris', 'France'),
+('wyattbutler', 'wyattbutler[123]', 'wyattbutler@gmail.com', 'Wyatt', 'Butler', 'wyattbutler.jpg', '2023-05-27', 126, 24, 'Manchester', 'UK'),
+('zoesimmons', 'zoesimmons]456[', 'zoesimmons@yahoo.com', 'Zoe', 'Simmons', 'zoesimmons.jpg', '2023-05-30', 24, 79, 'Los Angeles', 'USA'),
+('adrianfoster', 'adrianfoster:789:', 'adrianfoster@hotmail.com', 'Adrian', 'Foster', 'adrianfoster.jpg', '2023-06-03', 79, 141, 'Montreal', 'Canada'),
+('madelyngonzales', 'madelyngonzales;123;', 'madelyngonzales@gmail.com', 'Madelyn', 'Gonzales', 'madelyngonzales.jpg', '2023-06-11', 141, 62, 'Vancouver', 'Canada'),
+('zacharybryant', 'zacharybryant<456<', 'zacharybryant@yahoo.com', 'Zachary', 'Bryant', 'zacharybryant.jpg', '2023-06-28', 62, 104, 'Sydney', 'Australia'),
+('ariannaalexander', 'ariannaalexander>789>', 'ariannaalexander@hotmail.com', 'Arianna', 'Alexander', 'ariannaalexander.jpg', '2023-07-02', 104, 34, 'Brisbane', 'Australia'),
+('asherrussell', 'asherrussell?123?', 'asherrussell@gmail.com', 'Asher', 'Russell', 'asherrussell.jpg', '2023-07-16', 34, 110, 'Melbourne', 'Australia'),
+('katherinegriffin', 'katherinegriffin|456|', 'katherinegriffin@yahoo.com', 'Katherine', 'Griffin', 'katherinegriffin.jpg', '2023-07-18', 110, 76, 'London', 'UK'),
+('dominicdiaz', 'dominicdiaz/789/', 'dominicdiaz@hotmail.com', 'Dominic', 'Diaz', 'dominicdiaz.jpg', '2023-07-20', 76, 137, 'Chicago', 'USA'),
+('isabellehayes', 'isabellehayes"123"', 'isabellehayes@gmail.com', 'Isabelle', 'Hayes', 'isabellehayes.jpg', '2023-07-30', 137, 60, 'Paris', 'France'),
+('austincooper', 'austincooper\'456\'', 'austincooper@yahoo.com', 'Austin', 'Cooper', 'austincooper.jpg', '2023-08-09', 60, 121, 'Manchester', 'UK'),
+('emmaharris', 'emmaharris@789@', 'emmaharris@hotmail.com', 'Emma', 'Harris', 'emmaharris.jpg', '2023-08-10', 121, 5, 'Los Angeles', 'USA'),
+('noahevans', 'noahevans#123#', 'noahevans@gmail.com', 'Noah', 'Evans', 'noahevans.jpg', '2023-08-28', 5, 26, 'Montreal', 'Canada'),
+('oliviabell', 'oliviabell$456$', 'oliviabell@yahoo.com', 'Olivia', 'Bell', 'oliviabell.jpg', '2023-09-06', 26, 40, 'New York City', 'USA'),
+('williamperez', 'williamperez%789%', 'williamperez@hotmail.com', 'William', 'Perez', 'williamperez.jpg', '2023-09-25', 40, 24, 'Sydney', 'Australia'),
+('sophiarogers', 'sophiarogers^123^', 'sophiarogers@gmail.com', 'Sophia', 'Rogers', 'sophiarogers.jpg', '2023-09-26', 24, 13, 'Brisbane', 'Australia'),
+('jamesmurphy', 'jamesmurphy&456&', 'jamesmurphy@yahoo.com', 'James', 'Murphy', 'jamesmurphy.jpg', '2023-10-28', 13, 0, 'Melbourne', 'Australia'),
+('ameliareed', 'ameliareed*789*', 'ameliareed@hotmail.com', 'Amelia', 'Reed', 'ameliareed.jpg', '2023-11-06', 0, 24, 'London', 'UK'),
+('oliverbailey', 'oliverbailey(123)', 'oliverbailey@gmail.com', 'Oliver', 'Bailey', 'oliverbailey.jpg', '2023-11-23', 24, 45, 'Chicago', 'USA'),
+('avarivera', 'avarivera)456)', 'avarivera@yahoo.com', 'Ava', 'Rivera', 'avarivera.jpg', '2024-01-05', 45, 0, 'Paris', 'France'),
+('elijahrichardson', 'elijahrichardson-789-', 'elijahrichardson@hotmail.com', 'Elijah', 'Richardson', 'elijahrichardson.jpg', '2024-01-30', 0, 67, 'Manchester', 'UK'),
+('isabellacox', 'isabellacox=123=', 'isabellacox@gmail.com', 'Isabella', 'Cox', 'isabellacox.jpg', '2024-02-08', 67, 100, 'Los Angeles', 'USA'),
+('benjaminhoward', 'benjaminhoward+456+', 'benjaminhoward@yahoo.com', 'Benjamin', 'Howard', 'benjaminhoward.jpg', '2024-02-16', 100, 47, 'Montreal', 'Canada'),
+('charlottetorres', 'charlottetorres{789}', 'charlottetorres@hotmail.com', 'Charlotte', 'Torres', 'charlottetorres.jpg', '2024-02-26', 47, 3, 'Vancouver', 'Canada'),
+('lucaspeterson', 'lucaspeterson}123}', 'lucaspeterson@gmail.com', 'Lucas', 'Peterson', 'lucaspeterso.jpg', '2024-03-15', 3, 13, 'Sydney', 'Australia');
+
+-- Reservations data insertion
+
+INSERT INTO Reservations (ReservedTime, Guests, RestaurantID, UserID) 
+VALUES 
+('2021-05-03 16:45:00', 4, 22, 12),
+('2021-07-03 11:40:00', 7, 23, 56),
+('2021-07-21 10:55:00', 2, 41, 40),
+('2021-08-07 14:25:00', 8, 29, 51),
+('2021-08-10 17:00:00', 8, 37, 108),
+('2021-08-14 14:55:00', 2, 29, 146),
+('2021-08-26 18:40:00', 2, 4, 27),
+('2021-10-01 17:50:00', 3, 47, 1),
+('2021-10-02 12:50:00', 6, 26, 116),
+('2021-10-03 14:40:00', 7, 48, 25),
+('2021-10-08 10:05:00', 8, 10, 138),
+('2021-10-09 12:15:00', 6, 45, 76),
+('2021-10-16 15:30:00', 6, 14, 31),
+('2021-10-21 12:45:00', 6, 49, 53),
+('2021-10-28 15:45:00', 5, 36, 80),
+('2021-10-29 10:35:00', 2, 20, 136),
+('2021-11-19 18:45:00', 4, 21, 132),
+('2021-11-23 09:20:00', 5, 26, 113),
+('2021-11-27 09:00:00', 5, 28, 32),
+('2021-11-30 17:30:00', 2, 21, 69),
+('2021-12-01 12:30:00', 5, 19, 47),
+('2021-12-02 10:35:00', 3, 37, 145),
+('2021-12-11 10:45:00', 6, 43, 75),
+('2022-01-05 15:30:00', 5, 38, 73),
+('2022-01-07 18:30:00', 8, 39, 19),
+('2022-01-27 13:00:00', 6, 12, 57),
+('2022-01-29 17:20:00', 8, 24, 92),
+('2022-02-08 12:30:00', 3, 9, 101),
+('2022-02-13 16:15:00', 6, 14, 45),
+('2022-02-16 12:45:00', 8, 29, 53), 
+('2022-02-19 16:05:00', 7, 3, 77),
+('2022-02-21 15:20:00', 6, 17, 60),
+('2022-03-02 14:20:00', 6, 8, 109),
+('2022-03-05 12:40:00', 6, 48, 83),
+('2022-03-13 11:10:00', 3, 33, 111),
+('2022-03-15 18:50:00', 2, 47, 134),
+('2022-03-16 12:30:00', 7, 28, 109),
+('2022-03-22 15:15:00', 4, 26, 49),
+('2022-03-26 12:30:00', 7, 27, 112),
+('2022-03-29 17:00:00', 5, 6, 141),
+('2022-03-29 19:10:00', 7, 25, 40),
+('2022-04-03 13:35:00', 3, 20, 148),
+('2022-04-04 11:35:00', 4, 34, 125),
+('2022-04-08 14:55:00', 6, 36, 140),
+('2022-04-14 13:20:00', 6, 15, 120),
+('2022-04-18 10:35:00', 4, 32, 16),
+('2022-04-18 13:40:00', 4, 7, 106),
+('2022-04-19 11:45:00', 7, 11, 86),
+('2022-04-20 18:20:00', 7, 5, 84),
+('2022-04-27 14:55:00', 6, 24, 29),
+('2022-05-05 11:50:00', 7, 41, 62),
+('2022-05-09 16:00:00', 7, 31, 63),
+('2022-05-10 18:30:00', 7, 50, 122),
+('2022-05-11 12:40:00', 7, 12, 99),
+('2022-05-12 17:45:00', 4, 10, 76),
+('2022-05-15 10:45:00', 5, 21, 105),
+('2022-05-21 10:25:00', 7, 31, 61),
+('2022-05-28 13:15:00', 6, 2, 131),
+('2022-05-30 15:10:00', 4, 50, 45),
+('2022-05-30 17:50:00', 7, 26, 47),
+('2022-06-03 16:15:00', 8, 33, 73),
+('2022-06-06 09:55:00', 6, 25, 129),
+('2022-06-10 13:30:00', 4, 26, 147),
+('2022-06-10 17:45:00', 3, 24, 75),
+('2022-06-15 12:20:00', 8, 49, 106),
+('2022-06-25 13:30:00', 3, 34, 144),
+('2022-06-27 11:20:00', 6, 44, 79),
+('2022-06-29 14:25:00', 4, 38, 69),
+('2022-06-29 17:10:00', 7, 30, 17),
+('2022-07-02 11:55:00', 6, 14, 104),
+('2022-07-05 11:45:00', 5, 5, 144),
+('2022-07-08 16:15:00', 3, 15, 22),
+('2022-07-09 17:30:00', 4, 45, 54),
+('2022-07-13 13:05:00', 4, 25, 28),
+('2022-07-18 17:30:00', 5, 24, 55),
+('2022-07-20 14:15:00', 3, 32, 87),
+('2022-07-26 12:20:00', 5, 47, 58),
+('2022-07-29 13:25:00', 3, 39, 127),
+('2022-08-01 15:05:00', 4, 3, 129),
+('2022-08-03 16:30:00', 6, 47, 73),
+('2022-08-05 17:45:00', 7, 44, 119),
+('2022-08-08 15:55:00', 4, 8, 72),
+('2022-08-09 14:50:00', 5, 15, 121),
+('2022-08-13 10:50:00', 7, 18, 73),
+('2022-08-14 17:30:00', 7, 15, 121),
+('2022-08-15 12:50:00', 5, 35, 28),
+('2022-08-23 14:15:00', 7, 8, 87),
+('2022-08-25 12:30:00', 8, 4, 45),
+('2022-08-27 18:30:00', 4, 7, 112),
+('2022-08-28 14:35:00', 4, 38, 83),
+('2022-08-29 09:30:00', 6, 48, 120),
+('2022-09-08 15:00:00', 7, 36, 120),
+('2022-09-14 17:25:00', 3, 25, 77),
+('2022-09-14 17:55:00', 4, 15, 124),
+('2022-09-16 13:40:00', 7, 28, 76),
+('2022-09-19 10:50:00', 6, 11, 53),
+('2022-09-23 10:00:00', 2, 2, 90),
+('2022-09-25 15:25:00', 4, 3, 102),
+('2022-09-30 17:40:00', 7, 35, 139),
+('2022-10-09 12:30:00', 5, 9, 100),
+('2022-10-12 12:20:00', 7, 36, 98),
+('2022-10-14 14:05:00', 4, 36, 95),
+('2022-10-18 17:10:00', 7, 5, 139),
+('2022-10-20 16:20:00', 5, 13, 74),
+('2022-10-22 11:30:00', 5, 37, 52),
+('2022-10-27 11:50:00', 5, 13, 101),
+('2022-11-01 13:00:00', 5, 23, 84),
+('2022-11-05 14:55:00', 7, 9, 114),
+('2022-11-05 17:30:00', 3, 20, 69),
+('2022-11-06 16:20:00', 2, 26, 113),
+('2022-11-09 10:05:00', 5, 50, 126),
+('2022-11-10 14:40:00', 2, 42, 139),
+('2022-11-15 11:20:00', 6, 48, 90),
+('2022-11-16 14:55:00', 6, 16, 68),
+('2022-11-20 13:05:00', 5, 20, 62),
+('2022-11-20 13:10:00', 6, 6, 109),
+('2022-11-21 13:20:00', 8, 3, 64),
+('2022-11-26 12:20:00', 5, 37, 84),
+('2022-12-03 15:20:00', 4, 29, 123),
+('2022-12-07 18:50:00', 3, 25, 69),
+('2022-12-13 13:10:00', 2, 10, 104),
+('2022-12-16 16:20:00', 3, 37, 111),
+('2022-12-17 12:00:00', 3, 12, 84),
+('2022-12-27 15:05:00', 6, 6, 91),
+('2022-12-30 14:15:00', 3, 45, 95),
+('2022-12-30 18:20:00', 3, 29, 96),
+('2023-01-03 09:55:00', 3, 29, 102),
+('2023-01-08 11:15:00', 8, 5, 64),
+('2023-01-17 17:25:00', 4, 25, 90),
+('2023-01-24 17:40:00', 8, 36, 103),
+('2023-01-25 15:45:00', 3, 40, 59),
+('2023-01-25 17:00:00', 7, 19, 85),
+('2023-01-30 13:55:00', 6, 10, 45),
+('2023-02-15 13:30:00', 3, 17, 59),
+('2023-02-25 10:45:00', 6, 2, 55),
+('2023-03-02 12:50:00', 4, 17, 145),
+('2023-03-04 18:20:00', 5, 46, 25),
+('2023-03-08 18:00:00', 7, 34, 140),
+('2023-03-09 10:50:00', 5, 12, 74),
+('2023-03-18 09:40:00', 7, 2, 64),
+('2023-03-21 11:05:00', 8, 19, 52),
+('2023-03-25 14:10:00', 3, 4, 51),
+('2023-03-28 14:30:00', 7, 29, 71),
+('2023-04-11 16:40:00', 3, 11, 60),
+('2023-04-15 14:20:00', 3, 17, 84),
+('2023-04-28 10:55:00', 5, 46, 82),
+('2023-05-02 10:15:00', 6, 36, 147),
+('2023-05-03 12:30:00', 4, 49, 120),
+('2023-05-05 13:25:00', 4, 27, 126),
+('2023-05-05 16:50:00', 8, 41, 76),
+('2023-05-07 16:00:00', 6, 10, 84),
+('2023-05-12 16:20:00', 5, 3, 86),
+('2023-05-15 17:50:00', 8, 43, 62),
+('2023-05-22 10:25:00', 6, 49, 110),
+('2023-05-27 17:35:00', 3, 46, 84),
+('2023-06-05 16:30:00', 8, 16, 68),
+('2023-06-10 09:50:00', 2, 45, 93),
+('2023-06-11 15:25:00', 5, 22, 75),
+('2023-06-24 13:25:00', 3, 16, 58),
+('2023-06-28 13:50:00', 7, 37, 120),
+('2023-07-02 13:20:00', 8, 42, 113),
+('2023-07-02 19:30:00', 4, 41, 96),
+('2023-07-05 10:45:00', 3, 13, 94),
+('2023-07-06 11:15:00', 4, 41, 109),
+('2023-07-07 15:55:00', 4, 43, 58),
+('2023-07-10 16:15:00', 6, 6, 25),
+('2023-07-18 17:20:00', 8, 18, 104),
+('2023-07-25 16:10:00', 5, 38, 75),
+('2023-08-11 11:00:00', 7, 36, 76),
+('2023-08-17 11:55:00', 7, 43, 71),
+('2023-08-19 12:15:00', 4, 17, 143),
+('2023-08-25 10:00:00', 6, 28, 73),
+('2023-09-01 10:40:00', 7, 41, 99),
+('2023-09-07 09:35:00', 2, 45, 136),
+('2023-09-18 17:15:00', 6, 48, 128),
+('2023-09-19 14:30:00', 8, 4, 103),
+('2023-09-21 15:15:00', 4, 22, 115),
+('2023-09-26 11:55:00', 7, 23, 98),
+('2023-09-30 16:20:00', 3, 37, 58),
+('2023-10-01 13:45:00', 6, 14, 45),
+('2023-10-05 14:40:00', 8, 1, 60),
+('2023-10-17 16:55:00', 5, 16, 132),
+('2023-10-19 10:35:00', 8, 9, 143),
+('2023-10-24 14:35:00', 6, 39, 125),
+('2023-10-30 14:05:00', 7, 49, 127),
+('2023-11-06 12:55:00', 4, 44, 56),
+('2023-11-10 14:30:00', 3, 33, 94),
+('2023-11-13 11:45:00', 5, 26, 61),
+('2023-11-26 18:20:00', 3, 3, 134),
+('2023-11-28 18:10:00', 7, 28, 150),
+('2023-12-01 12:05:00', 5, 30, 67),
+('2023-12-02 11:20:00', 6, 41, 101),
+('2023-12-04 10:50:00', 6, 14, 91),
+('2023-12-13 13:30:00', 4, 41, 104),
+('2023-12-19 16:00:00', 6, 27, 117),
+('2023-12-20 13:45:00', 4, 7, 122),
+('2023-12-21 13:35:00', 5, 14, 137),
+('2023-12-27 15:20:00', 2, 41, 81),
+('2023-12-30 10:20:00', 8, 19, 42),
+('2024-01-05 10:10:00', 7, 46, 145);
+
+-- Reviews data insertion
+
+INSERT INTO Reviews (ReviewContent, ReviewDate, Rating, PhotoID, UserID, RestaurantID) 
+VALUES 
+('Great food and service!', '2021-05-24', 5, '47, 77, 100, 106, 156', 36, 1),
+('Nice ambiance, would recommend.', '2023-08-02', 4, '94', 14, 4),
+("My visit to this restaurant was a mixed bag. While the food was flavorful and satisfying, the service was slow and somewhat disorganized. Overall, it was an okay experience, but there's room for improvement.", '2020-12-13', 3, '113, 120, 138', 51, 7),
+('Good food.', '2022-11-21', 3, NULL, 9, 10),
+('Excellent food and service, highly recommend!', '2021-10-02', 5, '19, 64, 195', 27, 1),
+('Delicious meals, great atmosphere, will be back!', '2023-01-12', 4, '83, 177', 53, 11),
+('Wonderful experience overall, exceeded expectations.', '2020-01-14', 5, '31, 170', 13, 4),
+('Quick service, tasty dishes, satisfied customer.', '2021-04-03', 5, '189', 19, 16),
+('Cozy ambiance, friendly staff, enjoyed every moment.', '2023-10-22', 5, '163', 11, 9),
+('Average food, but the prices were reasonable.', '2022-03-09', 3, '42, 127', 118, 12),
+('Decent place for a casual meal with friends.', '2020-12-05', 3, NULL, 45, 42),
+('Impressive menu selection, everything tasted amazing.', '2023-06-17', 4, '144', 118, 7),
+('Way too expensive and the food lacked quality. The meat tasted a week old.', '2021-09-28', 1, '13, 53, 89', 131, 8),
+('Food was flavorful, portions were generous, no complaints.', '2024-02-11', 5, NULL, 105, 43),
+('Service was excellent, staff were friendly and efficient.', '2022-08-07', 5, '151', 63, 50),
+('Ambiance was cozy and inviting, perfect for a relaxed meal.', '2020-11-19', 4, '25', 63, 12),
+('Appreciated the vegetarian options on the menu.', '2023-05-26', 5, NULL, 119, 16),
+('Had a wonderful time celebrating a special occasion here.', '2021-07-08', 5, '58, 183', 7, 49),
+('Food was fresh and delicious, service was prompt.', '2024-01-30', 5, NULL, 40, 7),
+('Amazing! Well done and meat was cooked to perfection! This is my new go-to for special occasions.', '2022-10-12', 5, '133', 35, 12),
+('Impressed by the presentation of the dishes.', '2023-04-21', 5, '7, 78', 19, 13),
+('Had to call the staff to come take our order. We were ignored. Food was okay.', '2020-03-15', 2, '101', 5, 17),
+('Menu had something for everyone, loved the variety.', '2021-12-10', 5, '1, 37, 71', 17, 43),
+('Food was served promptly, no complaints.', '2023-08-03', 4, NULL, 119, 50),
+('Food was not the best and portions were small.', '2022-06-09', 2, NULL, 39, 18),
+('Nice selection of wines to complement the meal.', '2020-09-05', 4, '157', 28, 34),
+('Super small portions. Sloppy presentation.', '2020-02-23', 2, NULL, 105, 48),
+('It was okay. You get what you pay for.', '2022-06-05', 3, '171', 7, 34),
+('Never going there again. Awful dining experience, bad ambiance.', '2021-04-16', 2, '84, 121', 146, 44),
+('Delicious meals, great service, will definitely return.', '2023-07-26', 4, '48', 11, 25),
+('Lovely ambiance, enjoyed the evening.', '2022-01-18', 4, '107', 9, 12),
+('Impressed by the creativity of the chef.', '2020-07-29', 5, '32', 44, 45),
+('Long wait time to get a seat. Long wait time to get our food.', '2023-11-05', 2, '128', 73, 17),
+('Menu featured unique dishes that I hadn''t tried before.', '2021-08-22', 5, '114', 55, 11),
+('Food was served piping hot, loved every bite.', '2024-01-13', 5, '164', 1, 41),
+('Generous portions. Happy that I tried this place.', '2020-02-27', 4, NULL, 53, 39),
+('Great selection of drinks, perfect for a night out.', '2023-12-09', 5, '20, 145, 196', 50, 12),
+('Atmosphere was elegant and romantic.', '2022-09-14', 5, '139', 55, 35),
+('Service was impeccable, no complaints. Super friendly staff, the waiter was cute!', '2021-06-03', 5, '95', 32, 31),
+('Impeccable service, loved every moment in that restaurant!', '2024-03-28', 5, '26', 29, 13),
+('Fair prices for the quality of food, would visit again.', '2020-10-31', 3, NULL, 48, 25),
+('Menu lacked variety, awful.', '2023-02-16', 1, '178', 105, 4),
+('Enjoyed the meal, but service was a bit slow.', '2021-04-08', 4, '65', 69, 19),
+('Nice location, good food, will recommend to others.', '2024-01-21', 4, '14', 118, 13),
+('Satisfactory experience overall, would definitely consider returning.', '2022-07-02', 5, '2, 8', 37, 21),
+('Ambiance could use some improvement, but food was good.', '2020-09-23', 3, NULL, 93, 29),
+('Great value for money, left feeling satisfied.', '2023-05-04', 5, NULL, 18, 11),
+('Good experience overall.', '2021-12-17', 4, '54', 11, 1),
+('Excellent food and service, highly recommend!', '2024-01-06', 5, '59, 79, 90', 10, 14),
+('Delicious meals, great atmosphere, will be back!', '2022-03-19', 5, NULL, 52, 43),
+('Wonderful experience overall, exceeded expectations.', '2020-06-12', 5, '190', 29, 12),
+('Quick service, tasty dishes, satisfied customer.', '2023-08-28', 4, NULL, 51, 13),
+('Loved the experience so much! Amazing service and food was served at the perfect temperature.', '2021-11-11', 5, NULL, 95, 40),
+('Unpleasant experience. Food was cold.', '2024-03-01', 1, '43', 37, 5),
+('Decent place for a casual meal with friends.', '2022-01-26', 3, NULL, 77, 40),
+('Impressive menu selection, everything tasted amazing.', '2020-04-16', 5, '122, 184', 35, 11),
+('Attentive staff, had a pleasant time.', '2023-10-27', 5, '102, 134', 49, 24),
+('Amazing and delicious food!', '2021-07-16', 5, '33', 46, 49),
+('Tasty dishes, will come back.', '2024-02-08', 4, '38', 42, 12),
+('Friendly staff, enjoyed the meal.', '2022-05-22', 3, NULL, 84, 32),
+('The atmosphere was cozy and welcoming. The menu offered a variety of options, and the dishes we ordered were delicious and well-prepared.', '2020-12-04', 5, '85', 69, 34),
+('Clean and well-maintained restaurant.', '2023-06-15', 3, '172', 98, 1),
+('Not good. Please do yourself a favour and never visit this place', '2021-09-06', 2, NULL, 125, 25),
+('Not a great variety on the menu. I could make this myself.', '2024-01-18', 1, '27, 152', 67, 9),
+('Cute decor! Loved the staff! They were super helpful.', '2022-08-10', 5, '108', 1, 39),
+('Decent place for a quick meal, convenient location.', '2020-11-01', 3, '15, 72', 87, 10),
+('Tasty dishes, good value for money.', '2023-03-22', 5, '3, 165', 91, 21),
+('Friendly staff, clean environment, enjoyed every bite.', '2021-05-15', 5, '49, 66', 135, 23),
+('Average food, nothing extraordinary, but satisfied.', '2024-02-25', 3, '115, 146', 89, 32),
+('Reasonable prices, decent portions, would visit again.', '2022-06-09', 5, NULL, 14, 19),
+('Screaming child at the table next to us. Waiters delivered cold food. Salad was good though.', '2020-09-30', 2, '158', 117, 17),
+('Cannot emphasize how god this was!', '2023-04-12', 5, '21, 129', 21, 25),
+('Impressive variety on the menu, everything tasted great.', '2021-01-03', 5, NULL, 33, 14),
+('Quick service, tasty food.', '2024-03-14', 5, NULL, 87, 23),
+('Staff was inattentive and took the wrong order. Highly frustrating experience.', '2022-03-05', 2, NULL, 89, 44),
+('Menu lacked innovation, and the food was less than decent.', '2020-08-18', 1, NULL, 56, 9),
+('Fair prices for the quality of food, would recommend to friends.', '2023-12-01', 4, NULL, 3, 22),
+('Had a pleasant time dining here, would return for sure.', '2021-04-22', 4, '9, 96, 140', 22, 26),
+('Food was okay, nothing to write home about.', '2024-02-11', 2, '197', 84, 29),
+('Friendly staff, but food took a bit too long to arrive.', '2022-11-24', 2, NULL, 29, 8),
+('Enjoyed the meal, great music choice.', '2020-10-06', 4, NULL, 105, 28),
+('Unsatisfactory experience overall, would never consider revisiting.', '2022-09-17', 1, '179', 84, 47),
+('Ambiance could use some improvement, but food was good.', '2021-10-10', 5, NULL, 98, 24),
+('Very satisfied. Food was impeccable!', '2023-08-09', 5, NULL, 48, 45),
+('Service was super fast and efficient! Staff delivered with precision.', '2020-06-22', 5, '60', 3, 26),
+('Had a fantastic dining experience, exceeded my expectations.', '2022-12-14', 5, '55, 80', 89, 19),
+('Nice atmosphere, food was tasty, would recommend to others.', '2021-11-01', 5, '123', 10, 3),
+('Good selection of dishes, reasonable prices, will come back.', '2024-01-03', 4, '44, 91', 44, 14),
+('Don''t go there. Food was okay but not more than that.', '2020-05-15', 2, '4, 16, 0173', 114, 17),
+('Ambiance was romantic, perfect for date night.', '2022-08-25', 5, NULL, 14, 49),
+('Impressed by the presentation of the dishes, tasted as good as they looked.', '2021-06-06', 5, '67, 166', 129, 41),
+('Food was okay, bathrooms were nasty. Staff should pay attention to the small details.', '2023-09-15', 2, '34, 191', 78, 18),
+('Menu had something for everyone, even picky eaters like myself.', '2020-07-25', 4, NULL, 4, 29),
+('Superb! Best. Restaurant. Ever.', '2022-12-29', 5, NULL, 58, 15),
+('Loved the attention to detail in every aspect of the dining experience.', '2021-10-10', 5, '39', 9, 39),
+('Food was flavorful, portions were generous, no complaints.', '2023-01-21', 5, '22', 118, 3),
+('Service was impeccable, staff were knowledgeable about the menu.', '2020-03-03', 4, '28, 86, 103, 109, 159', 34, 21),
+('Chef outdid themselves. Super friendly staff.', '2022-06-12', 5, '185', 11, 12),
+('Appreciated the variety of vegetarian options on the menu, but it was awful. No flavour whatsoever.', '2021-04-23', 1, NULL, 87, 47),
+('Staff ruined my special occasion. They spilt red wine all over my dress.', '2023-08-01', 1, NULL, 23, 44),
+('Food was fresh and well-prepared, service was prompt.', '2020-12-11', 5, '73, 135', 18, 25),
+('Atmosphere was lively, enjoyed the buzz of the restaurant.', '2022-11-17', 4, '10, 116', 14, 12),
+('Impressed by the creativity of the chef, every dish was a delight.', '2021-09-28', 5, '147', 48, 3),
+('Staff went above and beyond to ensure we had a great experience.', '2023-03-09', 5, NULL, 13, 19),
+('Menu featured unique dishes that I hadn''t tried before, loved the exploration.', '2020-04-20', 5, NULL, 56, 49),
+('Food was served piping hot, loved the attention to detail.', '2022-07-30', 4, NULL, 28, 3),
+('Great bang for buck. I would come here every week.', '2021-06-10', 5, '50, 198', 14, 15),
+('Very greasy food and made me feel so bloated after the meal.', '2023-09-19', 2, '97', 72, 30),
+('Atmosphere was elegant, felt like a special occasion.', '2020-07-01', 5, NULL, 110, 49),
+('Appreciated the chef''s dedication to using local ingredients.', '2022-10-12', 5, NULL, 14, 22),
+('Too angry to even voice my frustrations. Just know that the staff is unfriendly.', '2021-08-23', 1, NULL, 40, 44),
+('Overall, had a fantastic dining experience, would highly recommend.', '2023-01-03', 4, '5', 4, 28),
+('Staff were attentive and accommodating, made for a pleasant dining experience.', '2020-02-14', 5, '45, 141', 144, 19),
+('Never-seen-before concept. Amazing selection of both meals and cocktails!', '2022-05-26', 5, '61, 130, 167', 131, 12),
+('The food smelled as good as it tasted, and I do not say that about many dishes!', '2021-04-07', 5, NULL, 80, 19),
+('Generous portions, left feeling satisfied.', '2023-07-16', 4, '124, 180', 107, 41),
+('Great selection of drinks and food. Great pre-theatre bite.', '2020-11-26', 4, '153', 72, 31),
+('The place reeked of garbage. Very unpleasant.', '2022-11-01', 1, '174', 126, 47),
+('Service was impeccable.', '2021-09-12', 5, '23, 68', 45, 22),
+('This place made me lose my appetite.', '2023-02-21', 1, NULL, 45, 9),
+('Great drink selection that pairs well with the wide variety of many choices.', '2020-01-02', 5, '81', 31, 26),
+('Average food, but the prices were reasonable.', '2022-04-14', 4, '56', 5, 21),
+('Stunning decor and food of the highest quality! Would go back.', '2021-02-25', 5, '17', 55, 12),
+('Impressive menu selection, everything tasted amazing.', '2023-06-05', 4, '160', 24, 23),
+('Attentive staff, clean restaurant, had a pleasant time.', '2020-09-14', 4, '104, 110', 1, 3),
+('Fair prices for the quality of food, would visit again.', '2022-08-25', 5, '35', 126, 36),
+('Food was decent, wouldn''t go back though.', '2021-07-06', 3, NULL, 131, 4),
+('Good service, meal was a little salty, but good overall.', '2023-10-15', 4, '92, 186', 114, 31),
+('Horrible location with barely any parking.', '2020-12-25', 2, '74', 26, 44),
+('Satisfactory experience overall, would consider returning.', '2022-12-01', 4, '40, 199', 84, 15),
+('Friendly staff complemented the warm environment!', '2021-10-12', 5, NULL, 42, 22),
+('Good service, good quality. Highly recommend!', '2023-01-22', 4, '29', 113, 40),
+('Never going back here again. Unfriendly and rude staff.', '2020-03-05', 1, '117', 65, 47),
+('Service was excellent, staff were friendly and efficient.', '2022-06-14', 5, NULL, 150, 26),
+('Cozy vibes, friendly staff.', '2023-02-19', 4, '6', 129, 32),
+('Appreciated the vegetarian options on the menu.', '2020-04-01', 3, '192', 43, 3),
+('Had a wonderful time celebrating a special occasion here.', '2022-07-13', 5, '87', 55, 7),
+('Food was fresh and delicious, service was prompt.', '2023-09-25', 5, NULL, 138, 38),
+('The best thing I''ve ever tried. Such a unique approach!', '2020-07-08', 5, NULL, 123, 45),
+('Impressed by the presentation of the dishes.', '2022-02-18', 5, NULL, 129, 15),
+('Staff were accommodating and attentive.', '2021-12-06', 5, '51, 148', 87, 20),
+('Loved the entrée selection. Something for everyone to enjoy!', '2024-02-09', 4, '98, 154', 84, 32),
+('It''s not my first time visiting this restaurant. I was highly disappointed when I received the wrong order.', '2020-06-21', 2, NULL, 123, 45),
+('Filled my stomach. Portions were perfect and did not leave me bloated.', '2022-10-01', 5, '24', 47, 12),
+('Huge selection of wines that go well with their steak.', '2021-08-13', 5, '11, 62, 136, 168', 52, 28),
+('Atmosphere was ruined by the loud music.', '2023-11-21', 1, NULL, 28, 48),
+('Service was friendly and efficient, no complaints.', '2020-09-01', 5, '131, 181', 74, 36),
+('Overall, had a fantastic dining experience.', '2022-01-13', 5, '46, 175', 3, 28),
+('Delicious meals, great service, will definitely return.', '2021-11-01', 5, '125', 77, 29),
+('Lovely ambiance, enjoyed the evening.', '2023-02-12', 5, NULL, 126, 36),
+('Impressed by the creativity of the chef.', '2020-04-26', 5, '187', 27, 28),
+('Staff were attentive and accommodating, made for a pleasant dining experience.', '2022-08-06', 5, '69, 161', 19, 22),
+('Such a unique approach to this type of cuisine. Compliments to the chef!', '2021-06-17', 5, NULL, 3, 15),
+('Great food! Everyone needs to try this place at least once in their lives.', '2023-09-24', 5, '142', 80, 12),
+('Generous portions, left feeling satisfied.', '2020-11-05', 5, '75', 16, 16),
+('Great selection of drinks, perfect for a night out.', '2022-10-12', 4, NULL, 24, 23),
+('Loved the energy in the restaurant! Very vibrant!', '2021-08-23', 5, NULL, 22, 22),
+('Service was impeccable, no complaints.', '2023-01-02', 5, '18', 34, 29),
+('Delicious meals, reasonable prices, will for sure recommend.', '2020-03-16', 5, '57, 82', 63, 24),
+('Main meal was somewhat enjoyable, but salad and dessert was disgusting.', '2022-06-28', 2, NULL, 4, 32),
+('Quick service, friendly staff, satisfied customer.', '2021-05-09', 5, '105, 111', 60, 20),
+('Cozy ambiance, perfect for a quiet dinner.', '2023-08-17', 4, NULL, 60, 42),
+('Did not meet my expectations.', '2020-12-28', 2, '36, 118, 193', 60, 45),
+('Food was fresh and flavorful, no complaints.', '2022-12-04', 5, NULL, 32, 36),
+('Overall restaurant was very dirty, unfriendly staff, and food was atrocious.', '2021-10-15', 1, '93', 120, 5),
+('Overall, had a great time, will come back.', '2023-01-25', 5, NULL, 18, 36),
+('No complaints at all.', '2020-02-06', 5, '200', 16, 20),
+('Overall, had a fantastic dining experience.', '2022-05-18', 5, '30', 113, 38),
+('Delicious meals, great service, will definitely return.', '2021-03-01', 5, '41, 182', 47, 37),
+('Lovely ambiance, enjoyed the evening.', '2023-06-12', 4, '12', 18, 35),
+('Impressed by the creativity of the chef, especially the personal touch.', '2020-09-22', 5, '63, 149', 21, 32),
+('Delicious meals, great atmosphere, will be back!', '2022-09-28', 5, NULL, 114, 28),
+('Exceeded expectations.', '2021-08-09', 5, NULL, 110, 20),
+('Quick service, tasty dishes, satisfied customer.', '2023-11-18', 5, NULL, 7, 32),
+('Not bad, food was good.', '2020-01-29', 4, '188', 19, 41),
+('Got food poisoning from uncooked meat.', '2022-04-10', 1, '88, 169, 176', 39, 18),
+('Great place for a casual meal with friends.', '2021-02-21', 5, '52', 14, 37),
+('Disappointed. I read many great reviews but must''ve been a bad batch of vegetables today.', '2023-06-02', 2, '155', 17, 45),
+('Attentive staff, clean restaurant, had a pleasant time.', '2020-08-13', 4, '126', 5, 35),
+('Cool aesthetics! Chef''s story is fascinating.', '2022-07-25', 5, '76', 16, 32),
+('Menu lacked variety, food was not good.', '2021-06-05', 1, NULL, 126, 5),
+('Enjoyed the meal, service was impeccable.', '2023-09-14', 5, NULL, 117, 20),
+('Must try this place at least once! Would recommend!', '2020-11-24', 4, NULL, 78, 38),
+('Satisfactory experience overall, would consider returning.', '2022-11-30', 5, '132', 141, 30),
+('Food was good.', '2021-10-11', 5, '162', 141, 37),
+('Superior value for the price!', '2023-01-21', 5, '99', 102, 12),
+('Food was flavorful, portions were generous, no complaints.', '2020-04-02', 5, NULL, 100, 45),
+('Service was excellent, staff were friendly and efficient.', '2022-07-14', 5, '137, 143', 21, 37),
+('Super noisy. Waitress made a mistake in our order. Would not recommend', '2023-12-04', 1, '70', 63, 48),
+('Appreciated the vegetarian options on the menu.', '2020-09-15', 5, '119', 18, 30),
+('Had a wonderful time celebrating a special occasion here.', '2022-12-27', 4, NULL, 80, 38),
+('Food was fresh and delicious, service was prompt.', '2021-11-08', 4, '194', 82, 38),
+('So many great choices to choose from, it was difficult!', '2023-03-09', 5, NULL, 43, 30),
+('Not a fan of the dishes at all. Awful overall. Do not go there.', '2020-05-20', 1, NULL, 91, 17),
+('Chef accommodated my allergies and food was so tasteful and rich! Would recommend!', '2022-08-01', 5, NULL, 35, 12),
+('Menu had something for everyone, loved the variety.', '2021-06-12', 5, NULL, 144, 38),
+('Did not enjoy it. Dust bunnies everywhere and unclean.', '2023-09-21', 2, '112', 77, 44),
+('Good portions, good price.', '2020-11-02', 5, '150', 13, 16),
+('Nice selection of wines to complement the meal.', '2022-10-14', 5, NULL, 17, 43),
+('Not enjoyable at all. Food came cold by the time waiters brought our food.', '2021-08-25', 1, NULL, 93, 48);
+
+-- Photos data insertion
+
+INSERT INTO Photos (PhotoAddressLink, ReviewID) VALUES 
+('http://example.com/photo1.jpg', 23),
+('http://example.com/photo2.jpg', 45),
+('http://example.com/photo3.jpg', 67),
+('http://example.com/photo4.jpg', 89),
+('http://example.com/photo5.jpg', 112),
+('http://example.com/photo6.jpg', 135),
+('http://example.com/photo7.jpg', 21),
+('http://example.com/photo8.jpg', 45),
+('http://example.com/photo9.jpg', 78),
+('http://example.com/photo10.jpg', 102),
+('http://example.com/photo11.jpg', 145),
+('http://example.com/photo12.jpg', 170),
+('http://example.com/photo13.jpg', 13),
+('http://example.com/photo14.jpg', 44),
+('http://example.com/photo15.jpg', 66),
+('http://example.com/photo16.jpg', 89),
+('http://example.com/photo17.jpg', 123),
+('http://example.com/photo18.jpg', 158),
+('http://example.com/photo19.jpg', 5),
+('http://example.com/photo20.jpg', 37),
+('http://example.com/photo21.jpg', 72),
+('http://example.com/photo22.jpg', 96),
+('http://example.com/photo23.jpg', 119),
+('http://example.com/photo24.jpg', 144),
+('http://example.com/photo25.jpg', 16),
+('http://example.com/photo26.jpg', 40),
+('http://example.com/photo27.jpg', 64),
+('http://example.com/photo28.jpg', 97),
+('http://example.com/photo29.jpg', 132),
+('http://example.com/photo30.jpg', 168),
+('http://example.com/photo31.jpg', 7),
+('http://example.com/photo32.jpg', 32),
+('http://example.com/photo33.jpg', 58),
+('http://example.com/photo34.jpg', 92),
+('http://example.com/photo35.jpg', 126),
+('http://example.com/photo36.jpg', 163),
+('http://example.com/photo37.jpg', 23),
+('http://example.com/photo38.jpg', 59),
+('http://example.com/photo39.jpg', 95),
+('http://example.com/photo40.jpg', 130),
+('http://example.com/photo41.jpg', 169),
+('http://example.com/photo42.jpg', 10),
+('http://example.com/photo43.jpg', 54),
+('http://example.com/photo44.jpg', 88),
+('http://example.com/photo45.jpg', 113),
+('http://example.com/photo46.jpg', 148),
+('http://example.com/photo47.jpg', 1),
+('http://example.com/photo48.jpg', 30),
+('http://example.com/photo49.jpg', 68),
+('http://example.com/photo50.jpg', 107),
+('http://example.com/photo51.jpg', 141),
+('http://example.com/photo52.jpg', 177),
+('http://example.com/photo53.jpg', 13),
+('http://example.com/photo54.jpg', 48),
+('http://example.com/photo55.jpg', 86),
+('http://example.com/photo56.jpg', 122),
+('http://example.com/photo57.jpg', 159),
+('http://example.com/photo58.jpg', 18),
+('http://example.com/photo59.jpg', 49),
+('http://example.com/photo60.jpg', 85),
+('http://example.com/photo61.jpg', 114),
+('http://example.com/photo62.jpg', 145),
+('http://example.com/photo63.jpg', 171),
+('http://example.com/photo64.jpg', 5),
+('http://example.com/photo65.jpg', 43),
+('http://example.com/photo66.jpg', 68),
+('http://example.com/photo67.jpg', 91),
+('http://example.com/photo68.jpg', 119),
+('http://example.com/photo69.jpg', 152),
+('http://example.com/photo70.jpg', 189),
+('http://example.com/photo71.jpg', 23),
+('http://example.com/photo72.jpg', 66),
+('http://example.com/photo73.jpg', 101),
+('http://example.com/photo74.jpg', 129),
+('http://example.com/photo75.jpg', 155),
+('http://example.com/photo76.jpg', 180),
+('http://example.com/photo77.jpg', 1),
+('http://example.com/photo78.jpg', 21),
+('http://example.com/photo79.jpg', 49),
+('http://example.com/photo80.jpg', 86),
+('http://example.com/photo81.jpg', 121),
+('http://example.com/photo82.jpg', 159),
+('http://example.com/photo83.jpg', 6),
+('http://example.com/photo84.jpg', 29),
+('http://example.com/photo85.jpg', 61),
+('http://example.com/photo86.jpg', 97),
+('http://example.com/photo87.jpg', 137),
+('http://example.com/photo88.jpg', 176),
+('http://example.com/photo89.jpg', 13),
+('http://example.com/photo90.jpg', 49),
+('http://example.com/photo91.jpg', 88),
+('http://example.com/photo92.jpg', 128),
+('http://example.com/photo93.jpg', 165),
+('http://example.com/photo94.jpg', 2),
+('http://example.com/photo95.jpg', 39),
+('http://example.com/photo96.jpg', 78),
+('http://example.com/photo97.jpg', 108),
+('http://example.com/photo98.jpg', 142),
+('http://example.com/photo99.jpg', 186),
+('http://example.com/photo100.jpg', 1),
+('http://example.com/photo101.jpg', 22),
+('http://example.com/photo102.jpg', 57),
+('http://example.com/photo103.jpg', 97),
+('http://example.com/photo104.jpg', 125),
+('http://example.com/photo105.jpg', 161),
+('http://example.com/photo106.jpg', 1),
+('http://example.com/photo107.jpg', 31),
+('http://example.com/photo108.jpg', 65),
+('http://example.com/photo109.jpg', 97),
+('http://example.com/photo110.jpg', 125),
+('http://example.com/photo111.jpg', 161),
+('http://example.com/photo112.jpg', 197),
+('http://example.com/photo113.jpg', 3),
+('http://example.com/photo114.jpg', 34),
+('http://example.com/photo115.jpg', 69),
+('http://example.com/photo116.jpg', 102),
+('http://example.com/photo117.jpg', 133),
+('http://example.com/photo118.jpg', 163),
+('http://example.com/photo119.jpg', 190),
+('http://example.com/photo120.jpg', 3),
+('http://example.com/photo121.jpg', 29),
+('http://example.com/photo122.jpg', 56),
+('http://example.com/photo123.jpg', 87),
+('http://example.com/photo124.jpg', 116),
+('http://example.com/photo125.jpg', 149),
+('http://example.com/photo126.jpg', 179),
+('http://example.com/photo127.jpg', 10),
+('http://example.com/photo128.jpg', 33),
+('http://example.com/photo129.jpg', 72),
+('http://example.com/photo130.jpg', 114),
+('http://example.com/photo131.jpg', 147),
+('http://example.com/photo132.jpg', 184),
+('http://example.com/photo133.jpg', 20),
+('http://example.com/photo134.jpg', 57),
+('http://example.com/photo135.jpg', 101),
+('http://example.com/photo136.jpg', 145),
+('http://example.com/photo137.jpg', 188),
+('http://example.com/photo138.jpg', 3),
+('http://example.com/photo139.jpg', 38),
+('http://example.com/photo140.jpg', 78),
+('http://example.com/photo141.jpg', 113),
+('http://example.com/photo142.jpg', 154),
+('http://example.com/photo143.jpg', 188),
+('http://example.com/photo144.jpg', 12),
+('http://example.com/photo145.jpg', 37),
+('http://example.com/photo146.jpg', 69),
+('http://example.com/photo147.jpg', 103),
+('http://example.com/photo148.jpg', 141),
+('http://example.com/photo149.jpg', 171),
+('http://example.com/photo150.jpg', 198),
+('http://example.com/photo151.jpg', 15),
+('http://example.com/photo152.jpg', 64),
+('http://example.com/photo153.jpg', 117),
+('http://example.com/photo154.jpg', 142),
+('http://example.com/photo155.jpg', 178),
+('http://example.com/photo156.jpg', 1),
+('http://example.com/photo157.jpg', 26),
+('http://example.com/photo158.jpg', 71),
+('http://example.com/photo159.jpg', 97),
+('http://example.com/photo160.jpg', 124),
+('http://example.com/photo161.jpg', 152),
+('http://example.com/photo162.jpg', 185),
+('http://example.com/photo163.jpg', 9),
+('http://example.com/photo164.jpg', 35),
+('http://example.com/photo165.jpg', 67),
+('http://example.com/photo166.jpg', 91),
+('http://example.com/photo167.jpg', 114),
+('http://example.com/photo168.jpg', 145),
+('http://example.com/photo169.jpg', 176),
+('http://example.com/photo170.jpg', 7),
+('http://example.com/photo171.jpg', 28),
+('http://example.com/photo172.jpg', 62),
+('http://example.com/photo173.jpg', 89),
+('http://example.com/photo174.jpg', 118),
+('http://example.com/photo175.jpg', 148),
+('http://example.com/photo176.jpg', 176),
+('http://example.com/photo177.jpg', 6),
+('http://example.com/photo178.jpg', 42),
+('http://example.com/photo179.jpg', 82),
+('http://example.com/photo180.jpg', 116),
+('http://example.com/photo181.jpg', 147),
+('http://example.com/photo182.jpg', 169),
+('http://example.com/photo183.jpg', 18),
+('http://example.com/photo184.jpg', 56),
+('http://example.com/photo185.jpg', 98),
+('http://example.com/photo186.jpg', 128),
+('http://example.com/photo187.jpg', 151),
+('http://example.com/photo188.jpg', 175),
+('http://example.com/photo189.jpg', 8),
+('http://example.com/photo190.jpg', 51),
+('http://example.com/photo191.jpg', 92),
+('http://example.com/photo192.jpg', 136),
+('http://example.com/photo193.jpg', 163),
+('http://example.com/photo194.jpg', 192),
+('http://example.com/photo195.jpg', 5),
+('http://example.com/photo196.jpg', 37),
+('http://example.com/photo197.jpg', 79),
+('http://example.com/photo198.jpg', 107),
+('http://example.com/photo199.jpg', 130),
+('http://example.com/photo200.jpg', 167);
+-- Comments data insertion
+
+INSERT INTO Comments (Content, UserID, ReviewID) VALUES 
+('Wow, what a delightful experience!', 83, 27),
+('This place never fails to impress.', 112, 59),
+('The food was simply amazing.', 46, 177),
+('I''m already planning my next visit.', 29, 122),
+('Everything about this place is top-notch.', 91, 183),
+('I can''t stop thinking about the delicious meal.', 17, 109),
+('The ambiance here is perfect for a romantic dinner.', 65, 191),
+('Definitely a must-try for food enthusiasts.', 137, 41),
+('I was blown away by the flavors.', 124, 72),
+('A culinary masterpiece.', 8, 107),
+('Exquisite dishes, every single one.', 145, 32),
+('The service was impeccable.', 132, 175),
+('Such attention to detail in every aspect.', 69, 104),
+('I left feeling completely satisfied.', 38, 199),
+('The presentation of the dishes was stunning.', 99, 138),
+('It''s rare to find such quality these days.', 142, 42),
+('This restaurant exceeded all expectations.', 5, 82),
+('The staff here really know their stuff.', 66, 158),
+('Hats off to the chef, truly talented.', 43, 196),
+('I can''t recommend this place enough.', 141, 147),
+('Every bite was a taste sensation.', 145, 25),
+('Great food, great service, great atmosphere.', 11, 54),
+('Dining here was an absolute pleasure.', 28, 178),
+('I''m already telling all my friends about it.', 67, 186),
+('The menu offers something for everyone.', 49, 95),
+('Such a gem of a find.', 10, 75),
+('The flavors danced on my palate.', 147, 155),
+('I''ll definitely be back for more.', 76, 110),
+('The decor really adds to the experience.', 93, 156),
+('I left with a full stomach and a big smile.', 24, 116),
+('A true culinary adventure.', 119, 113),
+('The prices are reasonable for the quality.', 124, 12),
+('I wish I could give more than five stars.', 3, 122),
+('Each dish was better than the last.', 92, 78),
+('Dining here was a highlight of my week.', 2, 30),
+('I''m already craving their dishes again.', 118, 111),
+('The ambiance is cozy and inviting.', 25, 98),
+('This place is a foodie''s dream come true.', 42, 126),
+('I loved every minute of my dining experience.', 56, 60),
+('From appetizer to dessert, perfection.', 85, 10),
+('I''m still dreaming about the meal I had here.', 15, 2),
+('Such a lovely atmosphere to enjoy a meal in.', 69, 163),
+('The staff made me feel like royalty.', 7, 64),
+('I would travel just to eat here again.', 99, 153),
+('The portion sizes were just right.', 144, 31),
+('I appreciate the attention to dietary needs.', 68, 108),
+('I''ll definitely be recommending this place.', 123, 179),
+('You won''t regret dining here, trust me.', 141, 94),
+('The flavors were perfectly balanced.', 89, 97),
+('An unforgettable dining experience.', 77, 66),
+('The chef is a true culinary genius.', 86, 80),
+('I could eat here every day and never get bored.', 22, 101),
+('Such a great find in the city.', 16, 147),
+('The wine selection complemented the meal perfectly.', 84, 51),
+('A feast for all the senses.', 90, 84),
+('The attention to detail is exceptional.', 146, 149),
+('My taste buds are still tingling.', 147, 193),
+('The service was prompt and courteous.', 79, 87),
+('Dining here was an experience to remember.', 21, 45),
+('I appreciate the locally sourced ingredients.', 129, 106),
+('The atmosphere is lively and energetic.', 33, 191),
+('You won''t find a better dining experience elsewhere.', 20, 9),
+('I can''t fault a single thing about this place.', 61, 71),
+('This restaurant sets the bar high for others.', 6, 115),
+('I''ll be raving about this place for weeks.', 121, 29),
+('I can''t wait to come back and try more dishes.', 31, 89),
+('The staff went above and beyond to make our experience special.', 78, 127),
+('The dessert selection was out of this world.', 58, 158),
+('Such a cozy spot for a meal with friends.', 126, 151),
+('The attention to flavor combinations is impressive.', 51, 172),
+('I appreciate the innovative menu.', 71, 169),
+('A gastronomic delight from start to finish.', 70, 183),
+('The prices are reasonable for the quality you get.', 64, 81),
+('I''ve never tasted anything quite like it.', 9, 164),
+('The portions were generous and satisfying.', 54, 33),
+('The waitstaff was knowledgeable and friendly.', 63, 136),
+('The atmosphere is upscale yet welcoming.', 100, 26),
+('This place is a hidden gem.', 139, 23),
+('The dishes were as beautiful as they were delicious.', 36, 159),
+('Such a great place for a special occasion.', 115, 18),
+('The chef''s creativity shines through in every dish.', 134, 70),
+('I felt like royalty dining here.', 82, 104),
+('The cocktails were expertly crafted.', 104, 76),
+('A perfect spot for a date night.', 139, 118),
+('The attention to detail is unmatched.', 39, 156),
+('I left feeling thoroughly satisfied.', 113, 135),
+('I''ll be dreaming about this meal for days.', 76, 141),
+('The menu has something for everyone''s taste.', 14, 44),
+('Dining here is an experience, not just a meal.', 135, 65),
+('The flavors were bold and exciting.', 50, 169),
+('Such a charming atmosphere to dine in.', 45, 192),
+('This restaurant is a culinary masterpiece.', 131, 3),
+('The service was attentive without being intrusive.', 106, 110),
+('I can''t wait to bring my friends and family here.', 146, 1),
+('Every dish was a work of art.', 44, 141),
+('Dining here was the highlight of my week.', 125, 119),
+('The staff made us feel like VIPs.', 131, 60),
+('I appreciate the sustainable practices of this place.', 64, 129),
+('I''m already planning my next visit back.', 60, 113),
+('The menu is diverse and exciting.', 98, 34),
+('Such a cozy atmosphere, perfect for a meal with loved ones.', 38, 2),
+('The attention to detail in plating is impressive.', 45, 143),
+('I can''t get over how delicious everything was.', 139, 95),
+('The service was friendly and attentive.', 34, 107),
+('Dining here was a culinary adventure.', 88, 143),
+('The ambiance is inviting and comfortable.', 74, 91),
+('I left feeling fully satisfied.', 22, 109),
+('The chef''s passion shines through in every dish.', 131, 83),
+('I''ll definitely be recommending this place to friends.', 82, 158),
+('The dessert menu is to die for.', 146, 36),
+('Such a romantic spot for dinner.', 115, 166),
+('The food was worth every penny.', 25, 98),
+('Dining here was an absolute treat.', 23, 194),
+('The flavors were complex and delightful.', 49, 35),
+('The staff made us feel like family.', 52, 111),
+('The wine selection was superb.', 14, 54),
+('A wonderful experience from start to finish.', 28, 109),
+('The atmosphere is elegant and refined.', 55, 22),
+('I can''t wait to come back and try more dishes.', 16, 69),
+('This restaurant is a true gem.', 35, 158),
+('The portions were generous and satisfying.', 127, 116),
+('Every dish was bursting with flavor.', 66, 16),
+('The service was prompt and courteous.', 6, 168),
+('Such a lovely spot for a meal with friends.', 130, 94),
+('I''m still thinking about the meal I had here.', 139, 98),
+('The menu has a great variety to choose from.', 133, 68),
+('Dining here was a delightful experience.', 107, 51),
+('The ambiance is warm and inviting.', 62, 36),
+('I''ll definitely be back for more.', 81, 38),
+('The chef''s creativity knows no bounds.', 61, 67),
+('This place exceeded all expectations.', 67, 111),
+('I can''t fault a single thing about this place.', 11, 91),
+('Such attention to detail in every aspect.', 78, 181),
+('The presentation of the dishes was stunning.', 142, 120),
+('It''s rare to find such quality these days.', 73, 141),
+('I can''t recommend this place enough.', 116, 88),
+('Great food, great service, great atmosphere.', 74, 41),
+('Dining here was an absolute pleasure.', 58, 17),
+('I''m already telling all my friends about it.', 124, 151),
+('Every bite was a taste sensation.', 41, 38),
+('The decor really adds to the experience.', 29, 72),
+('I left with a full stomach and a big smile.', 107, 14),
+('A true culinary adventure.', 54, 133),
+('The prices are reasonable for the quality.', 121, 175),
+('I wish I could give more than five stars.', 142, 144),
+('Each dish was better than the last.', 115, 17),
+('Dining here was a highlight of my week.', 88, 11),
+('I''m already craving their dishes again.', 27, 137),
+('The ambiance is cozy and inviting.', 143, 71),
+('This place is a foodie''s dream come true.', 121, 74),
+('I loved every minute of my dining experience.', 79, 169),
+('From appetizer to dessert, perfection.', 29, 3),
+('I''m still dreaming about the meal I had here.', 71, 148),
+('Such a lovely atmosphere to enjoy a meal in.', 104, 151),
+('The staff made me feel like royalty.', 78, 197),
+('I would travel just to eat here again.', 122, 125),
+('The portion sizes were just right.', 82, 61),
+('I appreciate the attention to dietary needs.', 137, 199),
+('I''ll definitely be recommending this place.', 129, 184),
+('You won''t regret dining here, trust me.', 35, 128),
+('The flavors were perfectly balanced.', 24, 171),
+('An unforgettable dining experience.', 86, 48),
+('The chef is a true culinary genius.', 139, 105),
+('I could eat here every day and never get bored.', 106, 147),
+('Such a great find in the city.', 32, 29),
+('The wine selection complemented the meal perfectly.', 94, 39),
+('A feast for all the senses.', 78, 23),
+('The attention to detail is exceptional.', 65, 26),
+('My taste buds are still tingling.', 55, 157),
+('The service was prompt and courteous.', 139, 23),
+('Dining here was an experience to remember.', 49, 132),
+('I appreciate the locally sourced ingredients.', 33, 75),
+('The atmosphere is lively and energetic.', 74, 184),
+('You won''t find a better dining experience elsewhere.', 42, 94),
+('I can''t fault a single thing about this place.', 107, 169),
+('This restaurant sets the bar high for others.', 61, 111),
+('I''ll be raving about this place for weeks.', 57, 135),
+('I can''t wait to come back and try more dishes.', 145, 42),
+('The staff went above and beyond to make our experience special.', 93, 91),
+('The dessert selection was out of this world.', 63, 37),
+('Such a cozy spot for a meal with friends.', 116, 148),
+('The attention to flavor combinations is impressive.', 109, 58),
+('I appreciate the innovative menu.', 143, 86),
+('A gastronomic delight from start to finish.', 87, 61),
+('The prices are reasonable for the quality you get.', 85, 68),
+('I''ve never tasted anything quite like it.', 141, 57),
+('The portions were generous and satisfying.', 92, 139),
+('The waitstaff was knowledgeable and friendly.', 144, 127),
+('The atmosphere is upscale yet welcoming.', 101, 156),
+('This place is a hidden gem.', 16, 99),
+('The dishes were as beautiful as they were delicious.', 55, 104),
+('Such a great place for a special occasion.', 40, 90),
+('The chef''s creativity shines through in every dish.', 146, 185),
+('I felt like royalty dining here.', 125, 159),
+('The cocktails were expertly crafted.', 126, 60),
+('A perfect spot for a date night.', 71, 92),
+('The attention to detail is unmatched.', 99, 168),
+('I left feeling thoroughly satisfied.', 58, 74),
+('I''ll be dreaming about this meal for days.', 119, 143),
+('The menu has something for everyone''s taste.', 128, 87);
+
+-- Likes data insertion
+
+INSERT INTO Likes (ReviewID, UserID) VALUES 
+(120, 67),
+(159, 41),
+(45, 85),
+(14, 112),
+(76, 126),
+(148, 23),
+(98, 17),
+(24, 109),
+(99, 129),
+(135, 48),
+(70, 90),
+(189, 112),
+(112, 32),
+(31, 24),
+(181, 3),
+(193, 113),
+(22, 67),
+(77, 135),
+(155, 105),
+(179, 98),
+(45, 33),
+(55, 112),
+(120, 61),
+(61, 56),
+(156, 28),
+(35, 67),
+(7, 10),
+(171, 44),
+(140, 72),
+(41, 95),
+(57, 113),
+(128, 89),
+(103, 68),
+(23, 110),
+(118, 41),
+(12, 96),
+(45, 150),
+(80, 65),
+(67, 122),
+(98, 136),
+(173, 29),
+(23, 66),
+(161, 9),
+(126, 60),
+(17, 107),
+(130, 54),
+(3, 129),
+(19, 78),
+(41, 84),
+(121, 147),
+(72, 120),
+(134, 135),
+(18, 100),
+(85, 56),
+(98, 94),
+(112, 89),
+(140, 91),
+(149, 68),
+(133, 105),
+(167, 72),
+(89, 121),
+(152, 16),
+(108, 104),
+(24, 42),
+(29, 43),
+(6, 109),
+(57, 137),
+(32, 20),
+(195, 68),
+(116, 59),
+(149, 76),
+(37, 14),
+(51, 145),
+(186, 143),
+(161, 84),
+(42, 68),
+(73, 129),
+(92, 62),
+(3, 41),
+(7, 63),
+(85, 111),
+(108, 148),
+(122, 87),
+(1, 57),
+(25, 131),
+(27, 112),
+(50, 60),
+(91, 75),
+(52, 72),
+(78, 144),
+(193, 144),
+(5, 82),
+(71, 97),
+(130, 149),
+(9, 71),
+(172, 100),
+(156, 131),
+(88, 133),
+(2, 18),
+(75, 102),
+(33, 80),
+(83, 38),
+(143, 64),
+(8, 136),
+(62, 72),
+(181, 94),
+(174, 55),
+(51, 72),
+(89, 23),
+(29, 98),
+(154, 137),
+(104, 121),
+(171, 111),
+(47, 131),
+(90, 72),
+(186, 84),
+(143, 112),
+(81, 20),
+(156, 25),
+(196, 33),
+(30, 17),
+(127, 109),
+(166, 16),
+(36, 76),
+(76, 74),
+(79, 81),
+(39, 33),
+(77, 76),
+(47, 109),
+(137, 123),
+(109, 89),
+(28, 129),
+(38, 137),
+(172, 75),
+(124, 116),
+(65, 47),
+(107, 131),
+(131, 55),
+(164, 41),
+(80, 76),
+(145, 113),
+(122, 115),
+(38, 33),
+(90, 147),
+(53, 120),
+(185, 92),
+(112, 89),
+(179, 129),
+(119, 99),
+(152, 121);
+
+-- DML (SQL Queries)
+
+-- Query #1: The highest rated restaurant category.
+
+SELECT C.CategoryName,
+	   AVG(R.AverageRating) AS AverageRatingPerCategory
+FROM Restaurants AS R
+JOIN Categories AS C ON R.CategoryID = C.CategoryID
+GROUP BY CategoryName
+ORDER BY AverageRatingPerCategory DESC;
+
+-- Query #2: Find the number of users registered per year.
+
+SELECT YEAR(RegistrationDate) AS RegistrationYear,
+	   COUNT(UserID) AS NumberOfRegistrations
+FROM Users
+GROUP BY YEAR(RegistrationDate)
+ORDER BY YEAR(RegistrationDate);
+
+-- Query #3: Find the restaurant category with the most reservations last year in 2023.
+
+SELECT CategoryName,
+	   COUNT(CategoryName) AS NumberOfTimesReserved
+FROM Reservations AS Res
+JOIN Restaurants AS R ON R.RestaurantID = Res.RestaurantID
+JOIN Categories AS C ON C.CategoryID = R.CategoryID
+WHERE YEAR(ReservedTime)= 2023
+GROUP BY CategoryName
+ORDER BY NumberOfTimesReserved DESC
+LIMIT 1;
+
+-- Query #4: Find the review(s) with the most number of likes for each restaurant. 
+
+SELECT R.RestaurantID, R.RestaurantName, RV.ReviewID, RV.ReviewContent, RV.Rating, RV.UserID, MAX(L.TotalLikes) AS MaxLikes
+FROM Restaurants R
+JOIN Reviews RV ON R.RestaurantID = RV.RestaurantID
+JOIN (
+    SELECT ReviewID, COUNT(*) AS TotalLikes
+    FROM Likes
+    GROUP BY ReviewID
+) L ON RV.ReviewID = L.ReviewID
+GROUP BY R.RestaurantID, R.RestaurantName, RV.ReviewID, RV.ReviewContent, RV.Rating, RV.UserID
+HAVING MAX(L.TotalLikes) = (
+    SELECT MAX(L2.TotalLikes) AS MaxLikes
+    FROM Restaurants R2
+    JOIN Reviews RV2 ON R2.RestaurantID = RV2.RestaurantID
+    JOIN (
+        SELECT ReviewID, COUNT(*) AS TotalLikes
+        FROM Likes
+        GROUP BY ReviewID
+    ) L2 ON RV2.ReviewID = L2.ReviewID
+    WHERE R2.RestaurantID = R.RestaurantID
+)
+ORDER BY R.RestaurantID, MaxLikes DESC;
+
+-- Query #5: Find the restaurant with the most photos posted about them.
+
+SELECT R.RestaurantName,
+	   COUNT(Rev.PhotoID) AS NumberOfPhotos
+FROM Photos AS P
+JOIN Reviews AS Rev ON Rev.ReviewID = P.ReviewID
+JOIN Restaurants AS R ON R.RestaurantID = Rev.RestaurantID
+GROUP BY R.RestaurantName
+ORDER BY NumberOfPhotos DESC
+LIMIT 1;
+
+-- Query #6: Find the top 3 most popular category types based on the number of restaurants and their average ratings.
+
+SELECT C.CategoryName AS CategoryType, 
+       COUNT(R.RestaurantID) AS NumRestaurants,
+       AVG(Rev.Rating) AS AverageRating
+FROM Restaurants AS R
+JOIN Reviews AS Rev ON R.RestaurantID = Rev.RestaurantID
+JOIN Categories AS C ON R.CategoryID = C.CategoryID
+GROUP BY C.CategoryName
+ORDER BY NumRestaurants DESC, AverageRating DESC
+LIMIT 3;
+
+-- Query #7: The number of reservations made across all years per season. 
+-- Spring runs from March 1 to May 31;
+-- Summer runs from June 1 to August 31;
+-- Fall (autumn) runs from September 1 to November 30; and
+-- Winter runs from December 1 to February 28 (February 29 in a leap year).
+
+SELECT
+    CASE
+        WHEN MONTH(ReservedTime) BETWEEN 3 AND 5 THEN 'Spring'
+        WHEN MONTH(ReservedTime) BETWEEN 6 AND 8 THEN 'Summer'
+        WHEN MONTH(ReservedTime) BETWEEN 9 AND 11 THEN 'Fall'
+        ELSE 'Winter'
+    END AS Season,
+    COUNT(*) AS NumReservations
+FROM
+    Reservations
+GROUP BY
+    CASE
+        WHEN MONTH(ReservedTime) BETWEEN 3 AND 5 THEN 'Spring'
+        WHEN MONTH(ReservedTime) BETWEEN 6 AND 8 THEN 'Summer'
+        WHEN MONTH(ReservedTime) BETWEEN 9 AND 11 THEN 'Fall'
+        ELSE 'Winter'
+    END
+ORDER BY Season;
+
+-- Query #8: Find the top 10 rated restaurants.
+
+SELECT RestaurantID, RestaurantName, AverageRating
+FROM Restaurants
+JOIN Address ON Restaurants.AddressID = Address.AddressID
+ORDER BY AverageRating DESC
+LIMIT 10;
+
+-- Query #9: Find the average rating of Fine Dining restaurants whose pricing is $$$.
+
+SELECT RestaurantID, RestaurantName, Pricing, AverageRating
+FROM Restaurants
+JOIN Categories ON Restaurants.CategoryID = Categories.CategoryID
+WHERE Categories.CategoryName = 'Fine Dining' AND (Pricing = '$$$')
+ORDER BY AverageRating DESC;
+
+-- Query #10: The restaurant(s) that have received more than 10 five star ratings and four star ratings.
+
+SELECT RestaurantID, RestaurantName, FiveStarReceived, FourStarReceived,
+	(FiveStarReceived + FourStarReceived) AS TotalStarReceived
+FROM Restaurants
+WHERE (FiveStarReceived + FourStarReceived) > 10;
+
+-- Query #11: Find the users that made as many reservations as reviews.
+
+SELECT U.UserID, U.Username,
+	COUNT(DISTINCT R.ReservationID) AS NumReservations,
+	COUNT(DISTINCT RV.ReviewID) AS NumReviews
+FROM Users U
+LEFT JOIN Reservations R ON U.UserID = R.UserID
+LEFT JOIN Reviews RV ON U.UserID = RV.UserID
+GROUP BY U.UserID, U.Username
+HAVING NumReservations = NumReviews AND NumReservations > 0;
+
+-- Query #12: Find the restaurants that have an average rating higher than their category’s average rating.
+
+​​SELECT R.RestaurantID, R.RestaurantName,
+	R.AverageRating AS RestaurantAverageRating,
+	C.CategoryName,
+	AVG(RV.Rating) AS CategoryAverageRating
+FROM Restaurants R
+JOIN Categories C ON R.CategoryID = C.CategoryID
+JOIN Reviews RV ON R.RestaurantID = RV.RestaurantID
+GROUP BY R.RestaurantID, R.RestaurantName, R.AverageRating, C.CategoryName
+HAVING R.AverageRating > AVG(RV.Rating);
+
+-- Query #13: Find distinct countries’ average rating.
+
+SELECT Country,
+    COUNT(*) AS TotalRestaurants,
+    AVG(R.AverageRating) AS Country_AverageRating
+FROM Address A
+JOIN Restaurants R ON A.AddressID = R.AddressID
+GROUP BY Country
+ORDER BY Country_AverageRating DESC;
+
+-- Query #14: Find the highest rated restaurant(s) within the most expensive ones in each category.
+
+SELECT C.CategoryName, R.RestaurantID, R.RestaurantName, R.Pricing, R.AverageRating
+FROM Restaurants R
+JOIN Categories C ON R.CategoryID = C.CategoryID
+WHERE (R.Pricing, R.CategoryID) IN (
+    SELECT MAX(Pricing), CategoryID
+    FROM Restaurants
+    GROUP BY CategoryID
+)
+AND R.AverageRating = (
+    SELECT MAX(AverageRating)
+    FROM Restaurants
+    WHERE CategoryID = R.CategoryID AND Pricing = R.Pricing
+);
+
+-- Query #15: Find the restaurants where the number of reservations exceeds the average number of reservations for all restaurants
+SELECT * FROM Restaurants
+WHERE RestaurantID IN (
+    SELECT RestaurantID
+    FROM Reservations
+    GROUP BY RestaurantID
+    HAVING COUNT(*) > (SELECT AVG(num_reservations) FROM (
+        SELECT COUNT(*) AS num_reservations
+        FROM Reservations
+        GROUP BY RestaurantID
+    ) a)
+);
+
+-- Query #16: Find the reviews that the restaurants received from the user(s) located in the same city.
+
+SELECT DISTINCT Reviews.ReviewID, Restaurants.RestaurantID, Restaurants.RestaurantName, Address.AddressID,Address.City, Users.UserID, Users.UserName, Users.CityLocated
+FROM Restaurants
+JOIN Reviews ON Restaurants.RestaurantID = Reviews.RestaurantID
+JOIN Users ON Reviews.UserID = Users.UserID
+JOIN Address ON Users.CityLocated = Address.City
+WHERE Restaurants.AddressID = Address.AddressID;
+
+-- Query #17: Find the top 1 restaurant with the most reservations for each country.
+
+SELECT 
+    a.Country AS CountryName,
+    r.RestaurantName AS TopRestaurant,
+    COUNT(*) AS ReservationCount
+FROM 
+    Reservations res
+JOIN 
+    Restaurants r ON res.RestaurantID = r.RestaurantID
+JOIN 
+    Address a ON r.AddressID = a.AddressID
+GROUP BY 
+    a.Country, r.RestaurantID
+HAVING 
+    COUNT(*) = (
+        SELECT 
+            COUNT(*)
+        FROM 
+            Reservations res_inner
+        JOIN 
+            Restaurants r_inner ON res_inner.RestaurantID = r_inner.RestaurantID
+        JOIN 
+            Address a_inner ON r_inner.AddressID = a_inner.AddressID
+        WHERE 
+            a_inner.Country = a.Country
+        GROUP BY 
+            r_inner.RestaurantID
+        ORDER BY 
+            COUNT(*) DESC
+        LIMIT 1
+    );
+
+-- Query #18: Find the number of reservations per restaurant.
+
+SELECT r.RestaurantName, COUNT(*) AS ReservationCount
+FROM Reservations res
+JOIN Restaurants r ON res.RestaurantID = r.RestaurantID
+GROUP BY r.RestaurantID
+ORDER BY ReservationCount DESC;
+
+-- Query #19: Find the best restaurant in terms of average rating and having at least a significant amount of reviews (i.e. 10 reviews).
+
+SELECT 
+    r.RestaurantName, 
+    AVG(re.Rating) AS AverageRating, 
+    COUNT(re.ReviewID) AS NumberOfReviews
+FROM 
+    Restaurants r
+    JOIN Reviews re ON r.RestaurantID = re.RestaurantID
+GROUP BY 
+    r.RestaurantName
+HAVING 
+    NumberOfReviews >= 10 -- Only consider restaurants with at least 10 reviews
+ORDER BY 
+    AverageRating DESC, NumberOfReviews DESC
+LIMIT 1;
+
+-- Query #20: Find the bottom 5 restaurant(s) with the lowest average rating (not including those without any ratings).
+
+SELECT RestaurantID, RestaurantName, AverageRating 
+FROM Restaurants 
+WHERE AverageRating != 0.0 
+ORDER BY AverageRating ASC, ReviewsReceived DESC 
+LIMIT 5;
